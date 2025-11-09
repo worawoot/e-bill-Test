@@ -86,12 +86,20 @@
       style="width:200px; height:auto; padding-bottom: 10px; ">
     <div class="form-group mb-2">
       <label for="searchtext">
-        <h3>ระบบสมัครสมาชิก</h3>
-        <h5 class="text-center text-danger">สื่อ และนวัตกรรมครูสิทธิชาติ สิทธิ</h5>
+        <h3>ระบบลงทะเบียน MWA e-Bill</h3>
+        <!-- <h5 class="text-center text-danger">สื่อ และนวัตกรรมครูสิทธิชาติ สิทธิ</h5> -->
       </label>
     </div>
   </center>
 
+  <div class="col-12">
+          <label for="device">ทะเบียนผู้ใช้น้ำ</label>
+          <input type="text" id="device" name="device" class="form-control" placeholder="กรอกทะเบียนผู้ใช้น้ำ 8 หลัก" required>
+          <div class="invalid-feedback">
+            กรุณากรอกทะเบียนผู้ใช้น้ำ 8 หลัก ด้วยครับ
+          </div>
+        </div>
+  
   <div class="container list">
     <form id="myForm" class="needs-validation my-4" novalidate>
       <div class="row justify-content-start g-3">
@@ -102,6 +110,7 @@
             กรุณากรอกชื่อ-สกุล
           </div>
         </div>
+        
         <div class="col-12">
           <label for="phone">เบอร์โทร</label>
           <input type="text" id="phone" name="phone" maxlength="10" class="form-control" placeholder="กรุณากรอกเบอร์โทร"
@@ -110,19 +119,15 @@
             กรุณากรอกเบอร์โทร
           </div>
         </div>
+        
+        
+        
         <div class="col-12">
-          <label for="device">กำหนดชื่อเข้าใช้งาน (Username)</label>
-          <input type="text" id="device" name="device" class="form-control" placeholder="กรุณากรอก Username" required>
-          <div class="invalid-feedback">
-            กรุณาตั้ง Username ด้วยครับ
-          </div>
-        </div>
-        <div class="col-12">
-          <label for="problem">รหัสผ่าน (Password)</label>
+          <label for="problem">Email</label>
           <input type="text" id="problem" name="problem" class="form-control"
-            placeholder="ตัวแรกให้ขึ้นต้นด้วยตัวอักษรภาษาอังกฤษ" required>
+            placeholder="กรอก E-mail" required>
           <div class="invalid-feedback">
-            กรุณาตั้งรหัสผ่านด้วยครับ
+            กรุณากรอก E-mail ด้วยครับ
           </div>
         </div>
 
