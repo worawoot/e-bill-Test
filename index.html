@@ -1,255 +1,373 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ลงทะเบียน MWA e-Bill</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"
-    integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
-  <style>
-    body {
-      font-family: Kanit, sans-serif;
-      background: rgb(252, 233, 233);
-      background: linear-gradient(0deg, rgba(252, 233, 233, 1) 0%, rgba(224, 244, 241, 1) 26%, rgba(255, 255, 255, 1) 71%);
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-      background-color: skyblue;
-    }
-
-    .list {
-      background-color: #ffffff;
-      padding: 1.8em 1.2em;
-      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-      border-radius: 0.6em;
-    }
-
-    .qBox {
-      border: solid 2px #525150 !important;
-      padding: 1rem;
-      margin: 0 10px;
-      border-radius: 13px;
-      max-width: 100%;
-      margin: auto;
-    }
-
-    label {
-      color: black;
-    }
-
-    .container {
-      max-width: 600px;
-    }
-
-    button[type="submit"] {
-      font-family: Kanit, sans-serif;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      width: 100%;
-      margin: 0 auto;
-      margin-top: 10px;
-      padding: 3%;
-      background: #b26bc2;
-      border: none;
-      border-radius: 5px;
-      font-size: 17px;
-      border-top-style: none;
-      border-right-style: none;
-      border-left-style: none;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    button[type="submit"]:hover {
-      background: #FFCE00;
-      color: #000;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
+<body class="bg-slate-100 min-h-screen">
+<div class="max-w-md m-auto p-2">
+        <form>
+            <div class="bg-white rounded-lg p-10">    
+                <div class="mb-5 text-center">
+                    <div class="mx-auto w-32 h-32 mb-2 border rounded-lg relative bg-slate-100 mb-4 shadow-inset">
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
+                    </div>
+                    <label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
+                        อัพโหลดรูป
+                        <input type="file" id="file" name="file" accept="image/*" class="hidden">
+                    </label>
+                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
+                </div>
+                <div class="flex flex-col">
+                <div class="mb-4">
+                    <input type="text" class="input-field w-full  bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="lineId" name="userlineId" >
+                </div>
+                <div class="mb-4">
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="nameId" placeholder="ชื่อ-สกุล" name="nameId" required>
+                </div>
+                <div class="mb-4">
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumberId" placeholder="รหัสพนักงาน" name="keynumberId" required>
+                </div>
+                <div class="mb-6">
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber2Id" placeholder="ตำแหน่ง" name="keynumber2Id" required>
+                </div>
+                </div>
+                <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">บันทึกข้อมูล</button>
+            </div>
+        </form>
+</div>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<script>
 
-<body>
-  <center>
-    <br />
-    <img src="https://firebasestorage.googleapis.com/v0/b/webapp-c8c38.appspot.com/o/th-full-white.png?alt=media&token=88a41cdb-27fd-4c98-8d11-a390ef103163"
-      style="width:100px; height:auto; padding-bottom: 10px; ">
-    <div class="form-group mb-2">
-      <label for="searchtext">
-        <h3>ระบบลงทะเบียน MWA e-Bill</h3>
-        <!-- <h5 class="text-center text-danger">สื่อ และนวัตกรรมครูสิทธิชาติ สิทธิ</h5> -->
-      </label>
-    </div>
-  </center>  
-  
-  <div class="container list">
-    <form id="myForm" class="needs-validation my-4" novalidate>
-      <div class="row justify-content-start g-3">     
-
-        <div class="col-12">
-          <label for="device">กำหนดชื่อเข้าใช้งาน (Username)</label>
-          <input type="text" id="device" name="device" class="form-control" placeholder="กรุณากรอก Username" required>
-          <div class="invalid-feedback">
-            กรุณาตั้ง Username ด้วยครับ
-          </div>
-        </div>  
-        
-        <div class="col-12">
-          <label for="name">ชื่อ-สกุล</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="ชื่อ-สกุล" required>
-          <div class="invalid-feedback">
-            กรุณากรอกชื่อ-สกุล
-          </div>
-        </div>
-        
-        <div class="col-12">
-          <label for="phone">เบอร์โทร</label>
-          <input type="text" id="phone" name="phone" maxlength="10" class="form-control" placeholder="กรุณากรอกเบอร์โทร"
-            required>
-          <div class="invalid-feedback">
-            กรุณากรอกเบอร์โทร
-          </div>
-        </div>   
-         
-        <div class="col-12">
-          <label for="problem">รหัสผ่าน (Password)</label>
-          <input type="text" id="problem" name="problem" class="form-control"
-            placeholder="ตัวแรกให้ขึ้นต้นด้วยตัวอักษรภาษาอังกฤษ" required>
-          <div class="invalid-feedback">
-            กรุณาตั้งรหัสผ่านด้วยครับ
-          </div>
-        </div>
-        
-        <div class="col-12">
-          <label for="place">เวลาโอนเงิน</label>
-          <input type="time" id="place" name="place" class="form-control" required>
-          <!-- <input type="file" id="file" name="file" class="form-control" required> -->
-          <div class="invalid-feedback">
-            กรุณาอัพโหลดสลิปโอนเงิน
-          </div>
-        </div>
-
-        <!-- <div class="col-12">
-          <label for="place">อัพโหลดไฟล์</label>
-<input type="file" name="uploaded_file" id="uploaded_file">
-          <div class="invalid-feedback">
-            กรุณาอัพโหลดสลิปโอนเงิน
-          </div>
-        </div> -->
-
-        <div class="col-12 text-center">
-          <button type="submit" class="btn btn-warning w-100"><i class="bi bi-send-fill"></i>&nbsp;ส่งข้อมูลลงทะเบียน</button>
-        </div>
-      </div>
-    </form>
-  </div>
-  <script>
-    const scriptUrl = 'https://script.google.com/macros/s/AKfycbw27YbbTgGCQ1JQSnEEfbiZTdzZZxdmvtMgI_s40nidAxNJ9lp9o9GQOADvup0x1jMH-w/exec'
-    var uid
-    $(document).ready(() => {
-      liff.init({
-        liffId: '1657790891-40VQpd6O',
-        withLoginOnExternalBrowser: true
-      })
-      liff.ready.then(() => {
-        console.log('liff ready')
-      })
-    })
-
-    function submit() {
-      $.LoadingOverlay('show')
-      let data = {
-        opt: 'savedata',
-        uid: liff.getDecodedIDToken().sub,
-        device: $('#device').val(),
-        name: $('#name').val(),
-        phone: $('#phone').val(),               
-        problem: $('#problem').val(),
-        place: $('#place').val(),
-      }
+	// ลิ้งจาก ระบบสมาชิก
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe3fr3YLBYXCwEwfNoJbJelKUeg-kvQcQpID7M0qPHVXIN0aUc/exec'; 
+     // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
+    const LIFF_ID = 'xxxxxxxx LINE LIFF id XXXXXXX'; // LIFF ID
 
 
-      $.ajax({
-        method: "POST",
-        url: scriptUrl,
-        data: data,
-        dataType: 'json',
-        success: function (res) {
-          $.LoadingOverlay('hide')
-          if (res.status == 'success') {
-            // reset the form
-            $('#myForm')[0].reset()
-            return Swal.fire({
-              icon: 'success',
-              title: 'บันทึกข้อมูลเรียบร้อย',
-              allowOutsideClick: false,
-              confirmButtonText: 'ตกลง'
-            })
-          }
-          return Swal.fire({
-            icon: 'error',
-            title: 'เกิดข้อผิดพลาด',
-            allowOutsideClick: false,
-            confirmButtonText: 'ตกลง'
-          })
-        },
-        error: function (err) {
-          console.log(err)
-          $.LoadingOverlay('hide')
-          alert('บันทึกข้อมูลไม่สำเร็จ')
+// ฟังก์ชันเริ่มต้น LIFF SDK
+window.onload = function () {
+    initializeLiff();
+};
+
+// ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
+async function initializeLiff() {
+    await liff.init({ liffId: `${LIFF_ID}` });
+
+    if (liff.isLoggedIn()) {
+        getUserProfile();
+    } else {
+        liff.login();
+    }
+}
+
+// ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ของผู้ใช้
+async function getUserProfile() {
+    try {
+        const profile = await liff.getProfile();
+        document.getElementById('userlineId').value = profile.userId;
+    } catch (error) {
+        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
+    }
+}
+
+// ฟังก์ชันสำหรับส่งข้อความ Flex
+async function sendFlexMessage() {
+    const flexMessage = {
+        type: 'flex',
+        altText: 'ลงทะเบียนเรียบร้อย',
+        contents: {
+            type: 'bubble',
+            styles: {
+                header: {
+                    backgroundColor: '#f0f0f0'
+                },
+                footer: {
+                    backgroundColor: '#f0f0f0'
+                },
+                body: {
+                    backgroundColor: '#ffffff'
+                }
+            },
+            header: {
+                type: 'box',
+                layout: 'vertical',
+                contents: [
+                    {
+                        type: 'text',
+                        text: 'ข้อมูลลงทะเบียนสำเร็จ',
+                        weight: 'bold',
+                        size: 'lg',
+                        color: '#000000',
+                        align: 'center'
+                    }
+                ]
+            },
+            body: {
+                type: 'box',
+                layout: 'vertical',
+                contents: [
+                    {
+                        type: 'box',
+                        layout: 'vertical',
+                        margin: 'lg',
+                        spacing: 'sm',
+                        contents: [
+                            {
+                                type: 'box',
+                                layout: 'horizontal',
+                                contents: [
+                                    {
+                                        type: 'text',
+                                        text: 'ชื่อ-สกุล',
+                                        size: 'sm',
+                                        color: '#555555',
+                                        flex: 1
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: document.getElementById('nameId').value,
+                                        size: 'sm',
+                                        color: '#111111',
+                                        align: 'end',
+                                        flex: 2
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'box',
+                                layout: 'horizontal',
+                                contents: [
+                                    {
+                                        type: 'text',
+                                        text: 'รหัสพนักงาน',
+                                        size: 'sm',
+                                        color: '#555555',
+                                        flex: 1
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: document.getElementById('keynumberId').value,
+                                        size: 'sm',
+                                        color: '#111111',
+                                        align: 'end',
+                                        flex: 2
+                                    }
+                                ]
+                            },
+                            {
+                                type: 'box',
+                                layout: 'horizontal',
+                                contents: [
+                                    {
+                                        type: 'text',
+                                        text: 'อีเมล',
+                                        size: 'sm',
+                                        color: '#555555',
+                                        flex: 1
+                                    },
+                                    {
+                                        type: 'text',
+                                        text: document.getElementById('keynumber2Id').value,
+                                        size: 'sm',
+                                        color: '#111111',
+                                        align: 'end',
+                                        flex: 2
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            footer: {
+                type: 'box',
+                layout: 'vertical',
+                contents: [
+                    {
+                        type: 'text',
+                        text: 'ยินดีต้อนรับ!',
+                        size: 'sm',
+                        color: '#aaaaaa',
+                        align: 'center'
+                    }
+                ]
+            }
         }
-      });
+    };
+
+    await liff.sendMessages([flexMessage]);
+}
+
+let url = `${WEB_APP_URL}`;
+let fileInput = document.getElementById("file");
+let imgPreview = document.getElementById("preview");
+let userlineIdInput = document.getElementById("userlineId");
+let nameIdInput = document.getElementById("nameId");
+let keynumberIdInput = document.getElementById("keynumberId");
+let keynumber2IdInput = document.getElementById("keynumber2Id");
+let submitBtn = document.getElementById("submitBtn");
+
+// ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+}
+
+// ฟังก์ชันสำหรับแสดงภาพตัวอย่าง
+function previewImage() {
+    if (fileInput.files.length > 0) {
+        let file = fileInput.files[0];
+        let reader = new FileReader();
+
+        reader.onload = function(e) {
+            imgPreview.src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+    }
+}
+
+// เพิ่ม event listener สำหรับการเปลี่ยนแปลงใน input file
+fileInput.addEventListener('change', () => {
+    previewImage();
+});
+
+// ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
+function validateForm() {
+    const userlineId = userlineIdInput.value.trim();
+    const nameId = nameIdInput.value.trim();
+    const keynumberId = keynumberIdInput.value.trim();
+    const keynumber2Id = keynumber2IdInput.value.trim();
+
+    if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber2Id === '') {
+        return false;
     }
 
-  </script>
-  <script>
-    (() => {
-      'use strict'
+    return true;
+}
 
-      // Fetch all the forms we want to apply custom Bootstrap validation styles to
-      const forms = document.querySelectorAll('.needs-validation')
+// เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
+submitBtn.addEventListener('click', async (event) => {
+    event.preventDefault();
 
-      // Loop over them and prevent submission
-      Array.from(forms).forEach(form => {
-        form.addEventListener('submit', event => {
-          event.preventDefault()
-          if (!form.checkValidity()) {
-            event.stopPropagation()
-            form.classList.add('was-validated')
-            $('#myForm').find(":invalid").first().focus();
-          } else {
-            submit()
-          }
+    if (!validateForm()) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Validation Error',
+            text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+        });
+        return;
+    }
 
-        }, false)
-      })
-    })()
-  </script>
+    const isConfirmed = await showConfirmationDialog();
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-    crossorigin="anonymous"></script>
-  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script
-    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+    if (isConfirmed) {
+        submitBtn.disabled = true;
 
+        try {
+            let obj;
 
-  <br />
-  <div class="text-center p-4 col-12 mt-4" style="background-color: rgba(0, 0, 0, 0.05);">
-    © 2025 Copyright | พัฒนาโดย นายวรวุฒิ แผงเพ็ชร์
-  </div>
+            if (fileInput.files.length > 0) {
+                let file = fileInput.files[0];
+                let base64 = await getBase64(file);
+                imgPreview.src = `data:${file.type};base64,${base64}`;
 
+                obj = {
+                    base64: base64,
+                    type: file.type,
+                    name: file.name,
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    keynumberId: keynumberIdInput.value,
+                    keynumber2Id: keynumber2IdInput.value
+                };
+            } else {
+                let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
+                let blob = await response.blob();
+                let base64 = await getBase64(blob);
+                
+                obj = {
+                    base64: base64,
+                    type: "image/png",
+                    name: "Avatar.png",
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    keynumberId: keynumberIdInput.value,
+                    keynumber2Id: keynumber2IdInput.value
+                };
+            }
+
+            Swal.fire({
+                title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                html: '<div class="swal2-loading"></div>',
+                onBeforeOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            let response = await fetch(url, {
+                method: "POST",
+                body: JSON.stringify(obj)
+            });
+
+            let data = await response.text();
+
+            Swal.fire({
+                title: 'สำเร็จ!',
+                text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                icon: 'success',
+                confirmButtonText: 'ปิด',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    liff.closeWindow();
+                }
+            });
+            sendFlexMessage();
+            console.log(data);
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
+            });
+
+            console.error(error);
+        } finally {
+            submitBtn.disabled = false;
+        }
+    } else {
+        Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info');
+    }
+});
+
+// ฟังก์ชันสำหรับแสดงกล่องยืนยัน
+async function showConfirmationDialog() {
+    const confirmation = await Swal.fire({
+        title: 'ยืนยันการส่งข้อมูล',
+        text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ใช่, ส่งข้อมูล!',
+        cancelButtonText: 'ไม่, ยกเลิก'
+    });
+
+    return confirmation.isConfirmed;
+}
+</script>
 </body>
-
 </html>
