@@ -188,7 +188,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบเสร็จรับเงิน', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: 'ยอมรับ', size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
+                            { type: 'text', text: 'ไม่ยอมรับ', size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     }
@@ -200,9 +200,9 @@ async function sendFlexMessage() {
                 contents: [
                     {
                         type: 'text',
-                        text: 'ยินดีต้อนรับ!',
+                        text: 'ส่งข้อมูลเรียบร้อยแล้ว! ขอบคุณที่ลงทะเบียน ',
                         size: 'sm',
-                        color: '#aaaaaa',
+                        color: '#ffffff',
                         align: 'center'
                     }
                 ]
@@ -318,7 +318,7 @@ submitBtn.addEventListener('click', async (event) => {
             }
 
             Swal.fire({
-                title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                title: '<div class="text-md">กำลังส่งข้อมูล...</div>',
                 allowOutsideClick: false,
                 showConfirmButton: false,
                 html: '<div class="swal2-loading"></div>',
@@ -336,7 +336,7 @@ submitBtn.addEventListener('click', async (event) => {
 
             Swal.fire({
                 title: 'สำเร็จ!',
-                text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                text: 'ส่งข้อมูลลงทะเบียนเรียบร้อย!',
                 icon: 'success',
                 confirmButtonText: 'ปิด',
             }).then((result) => {
