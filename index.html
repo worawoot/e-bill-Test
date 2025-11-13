@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,6 @@
     <title>ลงทะเบียน</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body class="bg-slate-100 min-h-screen">
 <div class="max-w-md m-auto p-2">
@@ -53,10 +51,10 @@
 <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 <script>
 
-	// ลิ้งจาก ระบบสมาชิก
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe3fr3YLBYXCwEwfNoJbJelKUeg-kvQcQpID7M0qPHVXIN0aUc/exec'; 
-     // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
-    const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
+// ลิ้งจาก ระบบสมาชิก
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe3fr3YLBYXCwEwfNoJbJelKUeg-kvQcQpID7M0qPHVXIN0aUc/exec'; 
+  // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
+const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
 
 
 // ฟังก์ชันเริ่มต้น LIFF SDK
@@ -93,15 +91,9 @@ async function sendFlexMessage() {
         contents: {
             type: 'bubble',
             styles: {
-                header: {
-                    backgroundColor: '#00C2F3'
-                },
-                footer: {
-                    backgroundColor: '#00C2F3'
-                },
-                body: {
-                    backgroundColor: '#ffffff'
-                }
+                header: { backgroundColor: '#00C2F3' },
+                footer: { backgroundColor: '#00C2F3' },
+                body: { backgroundColor: '#ffffff' }
             },
             header: {
                 type: 'box',
@@ -123,163 +115,82 @@ async function sendFlexMessage() {
                 contents: [
                     {
                         type: 'box',
-                        layout: 'vertical',                        
+                        layout: 'vertical',
                         contents: [
-							{
-            					type: 'image',
-            					url: 'https://firebasestorage.googleapis.com/v0/b/webapp-c8c38.appspot.com/o/th-full-white.png?alt=media&token=88a41cdb-27fd-4c98-8d11-a390ef103163',
-            					size: 'xxs',
-            					aspectMode: 'fit',
-            					align: 'start'
-          					},
-          					{
-            					type: 'text',
-            					text: 'สำนักงานประปาสาขาลาดพร้าว',
-            					weight: 'bold',
-            					size: 'sm',
-            					margin: 'md',
-            					position: 'absolute',
-            					offsetStart: '50px',
-            					offsetTop: 'md',
-            					color: '#555555'
-          					}
-        				],
-        					spacing: 'sm'
-      						},
-							
-							{
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'ทะเบียนผู้ใช้น้ำ',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
-                                    },
-                                    {
-                                        type: 'text',
-                                        text: '12345678',
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ],
-								 margin: 'lg'
+                            {
+                                type: 'image',
+                                url: 'https://firebasestorage.googleapis.com/v0/b/webapp-c8c38.appspot.com/o/th-full-white.png?alt=media&token=88a41cdb-27fd-4c98-8d11-a390ef103163',
+                                size: 'xxs',
+                                aspectMode: 'fit',
+                                align: 'start'
                             },
                             {
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'ชื่อ-สกุล',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
-                                    },
-                                    {
-                                        type: 'text',
-                                        text: document.getElementById('nameId').value,
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ],
-								 margin: 'sm'
-                            },
-                            {
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'เบอร์โทรศัพท์',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
-                                    },
-                                    {
-                                        type: 'text',
-                                        text: document.getElementById('keynumberId').value,
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ],
-								 margin: 'sm'
-                            },
-                            {
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'อีเมล',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
-                                    },
-                                    {
-                                        type: 'text',
-                                        text: document.getElementById('keynumber2Id').value,
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ],
-								 margin: 'sm'
-                            },
-							{
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'ใบแจ้งหนี้',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
-                                    },
-                                    {
-                                        type: 'text',
-                                        text: 'ยอมรับ',
-                                        size: 'sm',
-                                        color: '#32CD32',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ],
-								 margin: 'sm'
-                            },
-							{
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'ใบเสร็จรับเงิน',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
-                                    },
-                                    {
-                                        type: 'text',
-                                        text: 'ยอมรับ',
-                                        size: 'sm',
-                                        color: '#FF0000',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ],
-								 margin: 'sm'
+                                type: 'text',
+                                text: 'สำนักงานประปาสาขาลาดพร้าว',
+                                weight: 'bold',
+                                size: 'sm',
+                                margin: 'md',
+                                position: 'absolute',
+                                offsetStart: '50px',
+                                offsetTop: 'md',
+                                color: '#555555'
                             }
-                        ]
+                        ],
+                        spacing: 'sm'
+                    },
+                    {
+                        type: 'box',
+                        layout: 'horizontal',
+                        contents: [
+                            { type: 'text', text: 'ทะเบียนผู้ใช้น้ำ', size: 'sm', color: '#555555', flex: 1 },
+                            { type: 'text', text: '12345678', size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                        ],
+                        margin: 'lg'
+                    },
+                    {
+                        type: 'box',
+                        layout: 'horizontal',
+                        contents: [
+                            { type: 'text', text: 'ชื่อ-สกุล', size: 'sm', color: '#555555', flex: 1 },
+                            { type: 'text', text: document.getElementById('nameId').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                        ],
+                        margin: 'sm'
+                    },
+                    {
+                        type: 'box',
+                        layout: 'horizontal',
+                        contents: [
+                            { type: 'text', text: 'เบอร์โทรศัพท์', size: 'sm', color: '#555555', flex: 1 },
+                            { type: 'text', text: document.getElementById('keynumberId').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                        ],
+                        margin: 'sm'
+                    },
+                    {
+                        type: 'box',
+                        layout: 'horizontal',
+                        contents: [
+                            { type: 'text', text: 'อีเมล', size: 'sm', color: '#555555', flex: 1 },
+                            { type: 'text', text: document.getElementById('keynumber2Id').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                        ],
+                        margin: 'sm'
+                    },
+                    {
+                        type: 'box',
+                        layout: 'horizontal',
+                        contents: [
+                            { type: 'text', text: 'ใบแจ้งหนี้', size: 'sm', color: '#555555', flex: 1 },
+                            { type: 'text', text: 'ยอมรับ', size: 'sm', color: '#32CD32', align: 'end', flex: 2 }
+                        ],
+                        margin: 'sm'
+                    },
+                    {
+                        type: 'box',
+                        layout: 'horizontal',
+                        contents: [
+                            { type: 'text', text: 'ใบเสร็จรับเงิน', size: 'sm', color: '#555555', flex: 1 },
+                            { type: 'text', text: 'ยอมรับ', size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
+                        ],
+                        margin: 'sm'
                     }
                 ]
             },
@@ -301,7 +212,6 @@ async function sendFlexMessage() {
 
     await liff.sendMessages([flexMessage]);
 }
-
 let url = `${WEB_APP_URL}`;
 let fileInput = document.getElementById("file");
 let imgPreview = document.getElementById("preview");
