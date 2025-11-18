@@ -42,6 +42,11 @@
 					<label for="keynumber2Id" class="block text-sm font-semibold text-gray-700 mb-2">E-mail </label>
                     <input type="email" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber2Id" placeholder="example@mail.com" name="keynumber2Id" >
                 </div>
+
+				<div class="mb-6">
+					<label for="keynumber3Id" class="block text-sm font-semibold text-gray-700 mb-2">ทะเบียนผู้ใช้น้ำ </label>
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber3Id" placeholder="กรอกทะเบียนผู้ใช้น้ำ 8 หลัก" name="keynumber3Id" >
+                </div>
 					
                 </div>
                 <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">ส่งข้อมูลลงทะเบียน</button>
@@ -143,7 +148,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ทะเบียนผู้ใช้น้ำ', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: '12345678', size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                            { type: 'text', text: document.getElementById('keynumber3Id').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
                         ],
                         margin: 'lg'
                     },
@@ -220,6 +225,7 @@ let nameIdInput = document.getElementById("nameId");
 let keynumberIdInput = document.getElementById("keynumberId");
 let keynumber2IdInput = document.getElementById("keynumber2Id");
 let submitBtn = document.getElementById("submitBtn");
+let keynumber3IdInput = document.getElementById("keynumber3Id");
 
 // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
 function getBase64(file) {
@@ -258,8 +264,9 @@ function validateForm() {
     const nameId = nameIdInput.value.trim();
     const keynumberId = keynumberIdInput.value.trim();
     const keynumber2Id = keynumber2IdInput.value.trim();
+	const keynumber3Id = keynumber3IdInput.value.trim();
 
-    if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber2Id === '') {
+    if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber2Id === '' || keynumber3Id === '') {
         return false;
     }
 
@@ -300,6 +307,7 @@ submitBtn.addEventListener('click', async (event) => {
                     nameId: nameIdInput.value,
                     keynumberId: keynumberIdInput.value,
                     keynumber2Id: keynumber2IdInput.value
+					keynumber3Id: keynumber3IdInput.value
                 };
             } else {
                 let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
@@ -314,6 +322,7 @@ submitBtn.addEventListener('click', async (event) => {
                     nameId: nameIdInput.value,
                     keynumberId: keynumberIdInput.value,
                     keynumber2Id: keynumber2IdInput.value
+					keynumber3Id: keynumber3IdInput.value
                 };
             }
 
