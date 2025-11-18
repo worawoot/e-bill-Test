@@ -27,6 +27,11 @@
                 <div class="mb-4">
                     <input type="text" class="input-field w-full  bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="lineId" name="userlineId" readonly>
                 </div>
+
+				<div class="mb-6">
+					<label for="keynumber3Id" class="block text-sm font-semibold text-gray-700 mb-2">ทะเบียนผู้ใช้น้ำ </label>
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber3Id" placeholder="กรอกทะเบียนผู้ใช้น้ำ 8 หลัก" name="keynumber3Id" required >
+                </div>
 					
                 <div class="mb-4">
 					<label for="nameId" class="block text-sm font-semibold text-gray-700 mb-2">ชื่อ-นามสกุล <span style="color: #f90202">*</span></label>
@@ -41,12 +46,7 @@
                 <div class="mb-6">
 					<label for="keynumber2Id" class="block text-sm font-semibold text-gray-700 mb-2">E-mail </label>
                     <input type="email" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber2Id" placeholder="example@mail.com" name="keynumber2Id" >
-                </div>
-
-				<div class="mb-6">
-					<label for="keynumber3Id" class="block text-sm font-semibold text-gray-700 mb-2">ทะเบียนผู้ใช้น้ำ </label>
-                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber3Id" placeholder="กรอกทะเบียนผู้ใช้น้ำ 8 หลัก" name="keynumber3Id" >
-                </div>
+                </div>				
 					
                 </div>
                 <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">ส่งข้อมูลลงทะเบียน</button>
@@ -148,7 +148,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ทะเบียนผู้ใช้น้ำ', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber3Id').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                            { type: 'text', text: '12345678', size: 'sm', color: '#111111', align: 'end', flex: 2 }
                         ],
                         margin: 'lg'
                     },
