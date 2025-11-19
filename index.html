@@ -46,7 +46,16 @@
                 <div class="mb-6">
 					<label for="keynumber2Id" class="block text-sm font-semibold text-gray-700 mb-2">E-mail </label>
                     <input type="email" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber2Id" placeholder="example@mail.com" name="keynumber2Id" >
-                </div>				
+                </div>
+
+				<!-- Checkbox ใบแจ้งหนี้ -->
+                <div class="flex items-center">
+                    <input type="checkbox" id="saveInfo" name="saveInfo"
+                        class="h-4 w-4 text-slate-800 border-gray-300 rounded focus:ring-slate-800" />
+                    <label for="saveInfo" class="ml-2 block text-sm text-slate-800">
+                        ใบแจ้งค่าน้ำประปา(e-Bill)
+                    </label>
+                </div>
 					
                 </div>
                 <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">ส่งข้อมูลลงทะเบียน</button>
