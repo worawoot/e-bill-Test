@@ -175,7 +175,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'อีเมล', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber2Id').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
+                            { type: 'text', text: document.getElementById('keynumber2Id').value || ' - ', size: 'sm', color: '#111111', align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     },
