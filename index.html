@@ -359,11 +359,13 @@ function validateForm() {
 async function showConfirmationDialog() {
     const confirmation = await Swal.fire({
         title: 'ยืนยันการส่งข้อมูล',
-        text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+        text: 'ตรวจสอบความถูกต้องก่อนส่งข้อมูล?',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'ใช่, ส่งข้อมูล!',
-        cancelButtonText: 'ไม่, ยกเลิก'
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'แก้ไข',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33'
     });
  	//sendFlexMessage();
     return confirmation.isConfirmed;
@@ -375,9 +377,9 @@ submitBtn.addEventListener('click', async (event) => {
 
     if (!validateForm()) {
         Swal.fire({
-            icon: 'error',
-            title: 'Validation Error',
-            text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+            icon: 'warning',
+            title: 'ข้อมูลไม่ครบถ้วน',
+            text: 'กรุณากรอกข้อมูลในช่องที่มีเครื่องหมาย * ให้ครบ',
         });
         return;
     }
