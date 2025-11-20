@@ -50,7 +50,7 @@
                         อัพโหลดรูป
                         <input type="file" id="file" name="file" accept="image/*" class="hidden">
                     </label>
-                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
+                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">หรือใช้รูปโปรไฟล์เดิมจาก LINE</div>
                 </div>
 				
                 <div class="flex flex-col">
@@ -129,6 +129,11 @@ let keynumber3IdInput = document.getElementById("keynumber3Id");
 let keynumber4IdInput = document.getElementById("keynumber4Id");
 let keynumber5IdInput = document.getElementById("keynumber5Id");
 
+// ตัวแปรเก็บ URL รูปโปรไฟล์จาก LINE
+let lineProfilePictureUrl = ""; 
+// รูป Default กรณีไม่มีรูปไลน์และไม่อัพโหลด
+const defaultImageUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
     initializeLiff();
@@ -154,6 +159,12 @@ async function getUserProfile() {
     try {
         const profile = await liff.getProfile();
         document.getElementById('userlineId').value = profile.userId;
+
+		// *** ส่วนที่แก้ไข: ดึงรูปโปรไฟล์มาแสดง ***
+        if (profile.pictureUrl) {
+            imgPreview.src = profile.pictureUrl;
+            lineProfilePictureUrl = profile.pictureUrl; // เก็บค่าไว้ใช้ตอน Submit
+        }
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
     }
@@ -330,7 +341,12 @@ function previewImage() {
         };
         reader.readAsDataURL(file);
     } else {
-        imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+        // ถ้า user ยกเลิกการเลือกไฟล์ ให้กลับไปใช้รูปไลน์ (ถ้ามี)
+        if (lineProfilePictureUrl) {
+            imgPreview.src = lineProfilePictureUrl;
+        } else {
+            imgPreview.src = defaultImageUrl;
+        }
     }
 }
 
