@@ -56,12 +56,6 @@
                 </div>
 				
                 <div class="flex flex-col">
-					
-				<!-- เพิ่มช่องแสดงชื่อ Display Name -->
-                <div class="mb-4">
-                    <input type="text" class="input-field w-full bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="displayName" placeholder="Display Name" readonly>
-                </div>
-					
                 <div class="mb-4">
                     <input type="text" class="input-field w-full  bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="lineId" name="userlineId" readonly>
                 </div>
@@ -169,7 +163,7 @@ async function getUserProfile() {
         document.getElementById('userlineId').value = profile.userId;
 
 		// เพิ่มการแสดงชื่อ Display Name
-        document.getElementById('displayName').value = profile.displayName; 
+        // document.getElementById('displayName').value = profile.displayName; 
 
 		// *** ส่วนที่แก้ไข: ดึงรูปโปรไฟล์มาแสดง ***
         if (profile.pictureUrl) {
