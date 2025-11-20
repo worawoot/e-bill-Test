@@ -123,6 +123,14 @@ async function getUserProfile() {
 
 // ฟังก์ชันสำหรับส่งข้อความ Flex
 async function sendFlexMessage() {
+
+	// ตรวจสอบสถานะ Checkbox และกำหนดข้อความ
+    let statusBill = keynumber4IdInput.checked ? 'รับ' : 'ไม่รับ';
+    let colorBill = keynumber4IdInput.checked ? '#32CD32' : '#FF0000'; // เขียวถ้า "รับ", แดงถ้า "ไม่รับ"
+
+    let statusTax = keynumber5IdInput.checked ? 'รับ' : 'ไม่รับ';
+    let colorTax = keynumber5IdInput.checked ? '#32CD32' : '#FF0000';
+	
     const flexMessage = {
         type: 'flex',
         altText: 'ส่งข้อมูลลงทะเบียนเรียบร้อย',
@@ -217,7 +225,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบแจ้งหนี้', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber4Id').value , size: 'sm', color: '#32CD32', align: 'end', flex: 2 }
+                            { type: 'text', text: statusBill , size: 'sm', color: colorBill , align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     },
@@ -226,7 +234,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบเสร็จรับเงิน', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber5Id').value , size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
+                            { type: 'text', text: statusTax , size: 'sm', color: colorTax , align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     }
