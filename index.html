@@ -117,6 +117,18 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe
   // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
 const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
 
+let url = `${WEB_APP_URL}`;
+let fileInput = document.getElementById("file");
+let imgPreview = document.getElementById("preview");
+let userlineIdInput = document.getElementById("userlineId");
+let nameIdInput = document.getElementById("nameId");
+let keynumberIdInput = document.getElementById("keynumberId");
+let keynumber2IdInput = document.getElementById("keynumber2Id");
+let submitBtn = document.getElementById("submitBtn");
+let keynumber3IdInput = document.getElementById("keynumber3Id");
+let keynumber4IdInput = document.getElementById("keynumber4Id");
+let keynumber5IdInput = document.getElementById("keynumber5Id");
+
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
     initializeLiff();
@@ -297,17 +309,6 @@ async function sendFlexMessage() {
     }
     
 }
-let url = `${WEB_APP_URL}`;
-let fileInput = document.getElementById("file");
-let imgPreview = document.getElementById("preview");
-let userlineIdInput = document.getElementById("userlineId");
-let nameIdInput = document.getElementById("nameId");
-let keynumberIdInput = document.getElementById("keynumberId");
-let keynumber2IdInput = document.getElementById("keynumber2Id");
-let submitBtn = document.getElementById("submitBtn");
-let keynumber3IdInput = document.getElementById("keynumber3Id");
-let keynumber4IdInput = document.getElementById("keynumber4Id");
-let keynumber5IdInput = document.getElementById("keynumber5Id");
 
 // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
 function getBase64(file) {
