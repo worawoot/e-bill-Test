@@ -160,7 +160,7 @@ async function getUserProfile() {
     try {
         const profile = await liff.getProfile();
         document.getElementById('userlineId').value = profile.userId;
-		document.getElementById('nameId').value = profile.displayName; // (Optional) ดึงชื่อไลน์มาใส่ให้อัตโนมัติ
+		//document.getElementById('nameId').value = profile.displayName; // (Optional) ดึงชื่อไลน์มาใส่ให้อัตโนมัติ
 
 		// จัดการรูปโปรไฟล์
         if (profile.pictureUrl) {
