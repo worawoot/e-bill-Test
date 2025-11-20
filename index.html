@@ -217,7 +217,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบแจ้งหนี้', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber4Id').value || ' - ', size: 'sm', color: '#32CD32', align: 'end', flex: 2 }
+                            { type: 'text', text: document.getElementById('keynumber4Id').checked , size: 'sm', color: '#32CD32', align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     },
@@ -226,7 +226,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบเสร็จรับเงิน', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber5Id').value || ' - ', size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
+                            { type: 'text', text: document.getElementById('keynumber5Id').checked , size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     }
