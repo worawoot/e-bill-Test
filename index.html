@@ -399,6 +399,18 @@ submitBtn.addEventListener('click', async (event) => {
         return;
     }
 
+	// --- เพิ่มส่วนตรวจสอบทะเบียนผู้ใช้น้ำ 8 หลัก (0-9) ---
+    const keynumber3Val = keynumber3IdInput.value.trim();
+    if (!/^\d{8}$/.test(keynumber3Val)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'ข้อมูลไม่ถูกต้อง',
+            text: 'กรุณากรอกทะเบียนผู้ใช้น้ำเป็นตัวเลข 8 หลักเท่านั้น',
+        });
+        return;
+    }
+    // -----------------------------------------------
+
     const isConfirmed = await showConfirmationDialog();
 
     if (isConfirmed) {
