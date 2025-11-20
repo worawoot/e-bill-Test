@@ -42,18 +42,15 @@
 <div class="max-w-md m-auto p-2">
         <form>
             <div class="bg-white rounded-lg p-10">    
-                <div class="mb-5 text-center">
-					
-                    <!-- ส่วนแสดงรูปภาพโปรไฟล์ -->
+                <div class="mb-5 text-center">					
                     <div class="mx-auto w-32 h-32 mb-2 border rounded-lg relative bg-slate-100 mb-4 shadow-inset">
                         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
                     </div>
-                    
-                    <!-- เอาปุ่มอัพโหลดออก -->
-                    <div class="mx-auto w-full text-slate-500 text-sm text-center mt-2 font-semibold">รูปโปรไฟล์จาก LINE</div>
-					
-					<!-- เก็บค่า URL รูปภาพไว้ใน Hidden Input เพื่อนำไปใช้ตอน Submit -->
-                    <input type="hidden" id="pictureUrl" name="pictureUrl">
+                    <label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
+                        อัพโหลดรูปใหม่
+                        <input type="file" id="file" name="file" accept="image/*" class="hidden">
+                    </label>
+                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">หรือใช้รูปโปรไฟล์เดิมจาก LINE</div>
                 </div>
 				
                 <div class="flex flex-col">
@@ -121,8 +118,8 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe
 const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
 
 let url = `${WEB_APP_URL}`;
+let fileInput = document.getElementById("file");
 let imgPreview = document.getElementById("preview");
-let pictureUrlInput = document.getElementById("pictureUrl"); // Input ซ่อนสำหรับเก็บ URL
 let userlineIdInput = document.getElementById("userlineId");
 let nameIdInput = document.getElementById("nameId");
 let keynumberIdInput = document.getElementById("keynumberId");
@@ -131,9 +128,10 @@ let submitBtn = document.getElementById("submitBtn");
 let keynumber3IdInput = document.getElementById("keynumber3Id");
 let keynumber4IdInput = document.getElementById("keynumber4Id");
 let keynumber5IdInput = document.getElementById("keynumber5Id");
+let loadingOverlay = document.getElementById("loadingOverlay");
 
-// ค่าเริ่มต้นของรูปภาพ (หากไม่มีรูปโปรไฟล์)
-const DEFAULT_IMAGE = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+// ตัวแปรเก็บ URL รูปจาก LINE
+let lineProfileUrl = "";
 
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
@@ -162,20 +160,13 @@ async function getUserProfile() {
         document.getElementById('userlineId').value = profile.userId;
 		//document.getElementById('nameId').value = profile.displayName; // (Optional) ดึงชื่อไลน์มาใส่ให้อัตโนมัติ
 
-		// จัดการรูปโปรไฟล์
+		// --- แก้ไข: ดึงรูปจาก LINE มาแสดง ---
         if (profile.pictureUrl) {
             imgPreview.src = profile.pictureUrl;
-            pictureUrlInput.value = profile.pictureUrl;
-        } else {
-            imgPreview.src = DEFAULT_IMAGE;
-            pictureUrlInput.value = DEFAULT_IMAGE;
-        }
-		
+            lineProfileUrl = profile.pictureUrl; // เก็บค่าไว้ใช้ตอนส่งข้อมูล
+        }		
     } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
-		// Fallback กรณีดึงไม่ได้
-        imgPreview.src = DEFAULT_IMAGE;
-        pictureUrlInput.value = DEFAULT_IMAGE;
+        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);		
     }
 }
 
@@ -331,9 +322,8 @@ async function sendFlexMessage() {
         // ไม่ throw error เพื่อให้ระบบทำงานต่อได้แม้ส่งไลน์ไม่ผ่าน
     }
     
-}
-	
-/*
+}	
+
 // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
 function getBase64(file) {
     return new Promise((resolve, reject) => {
@@ -354,10 +344,14 @@ function previewImage() {
         };
         reader.readAsDataURL(file);
     } else {
-        imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+        // ถ้าไม่ได้เลือกไฟล์ และมีรููปไลน์ ให้กลับไปใช้รูปไลน์
+        if(lineProfileUrl) {
+            imgPreview.src = lineProfileUrl;
+        } else {
+            imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+        }
     }
 }
-*/
 	
 // เพิ่ม event listener สำหรับการเปลี่ยนแปลงใน input file
 fileInput.addEventListener('change', () => {
@@ -384,11 +378,13 @@ function validateForm() {
 async function showConfirmationDialog() {
     const confirmation = await Swal.fire({
         title: 'ยืนยันการส่งข้อมูล',
-        text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+        text: 'ตรวจสอบความถูกต้องก่อนส่งข้อมูล?',
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'ใช่, ส่งข้อมูล!',
-        cancelButtonText: 'ไม่, ยกเลิก'
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'แก้ไข',
+		confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33'
     });
  	//sendFlexMessage();
     return confirmation.isConfirmed;
@@ -400,9 +396,9 @@ submitBtn.addEventListener('click', async (event) => {
 
     if (!validateForm()) {
         Swal.fire({
-            icon: 'error',
-            title: 'Validation Error',
-            text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+            icon: 'warning',
+            title: 'ข้อมูลไม่ครบถ้วน',
+            text: 'กรุณากรอกข้อมูลในช่องที่มีเครื่องหมาย * ให้ครบ',
         });
         return;
     }
@@ -415,16 +411,55 @@ submitBtn.addEventListener('click', async (event) => {
 
         try {           
 
-            let obj = {
-                pictureUrl: pictureUrlInput.value || DEFAULT_IMAGE, // ส่ง Link แทน Base64
-                userlineId: userlineIdInput.value,
-                nameId: nameIdInput.value,
-                keynumberId: keynumberIdInput.value,
-                //keynumber2Id: keynumber2IdInput.value,
-				keynumber3Id: keynumber3IdInput.value,
-				keynumber4Id: keynumber4IdInput.checked,
-				keynumber5Id: keynumber5IdInput.checked
-                };            
+            // ตรวจสอบว่ามีการอัพโหลดไฟล์ใหม่หรือไม่
+            if (fileInput.files.length > 0) {
+                // กรณี 1: ผู้ใช้เลือกอัพโหลดรูปใหม่ -> ส่ง Base64 ไปสร้างไฟล์
+                let file = fileInput.files[0];
+                let base64 = await getBase64(file);
+                
+                obj = {
+                    base64: base64,
+                    type: file.type,
+                    name: file.name,
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    keynumberId: keynumberIdInput.value,
+                    keynumber2Id: keynumber2IdInput.value,
+                    keynumber3Id: keynumber3IdInput.value,
+                    keynumber4Id: keynumber4IdInput.checked,
+                    keynumber5Id: keynumber5IdInput.checked
+                };
+            } else if (lineProfileUrl) {
+                // กรณี 2: ไม่ได้อัพโหลดรูป แต่มีรูปจาก LINE -> ส่ง pictureUrl ไปบันทึก
+                obj = {
+                    pictureUrl: lineProfileUrl, // ส่ง URL แทน Base64
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    keynumberId: keynumberIdInput.value,
+                    keynumber2Id: keynumber2IdInput.value,
+                    keynumber3Id: keynumber3IdInput.value,
+                    keynumber4Id: keynumber4IdInput.checked,
+                    keynumber5Id: keynumber5IdInput.checked
+                };
+            } else {
+                // กรณี 3: ไม่มีรูปอะไรเลย -> ใช้ Default Placeholder (Base64)
+                let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
+                let blob = await response.blob();
+                let base64 = await getBase64(blob);
+                
+                obj = {
+                    base64: base64,
+                    type: "image/png",
+                    name: "Avatar.png",
+                    userlineId: userlineIdInput.value,
+                    nameId: nameIdInput.value,
+                    keynumberId: keynumberIdInput.value,
+                    keynumber2Id: keynumber2IdInput.value,
+                    keynumber3Id: keynumber3IdInput.value,
+                    keynumber4Id: keynumber4IdInput.checked,
+                    keynumber5Id: keynumber5IdInput.checked
+                };
+            }   
 
 			let response = await fetch(url, {
                 method: "POST",
