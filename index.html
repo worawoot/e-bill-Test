@@ -95,6 +95,10 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe
   // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
 const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
 
+// --- START: NEW CHECKBOX VALIDATION ---
+// ดึงค่าการ check
+const keynumber4IdCheck = document.getElementById('keynumber4Id').checked;
+const keynumber5IdCheck = document.getElementById('keynumber5Id').checked;
 
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
@@ -218,7 +222,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบแจ้งหนี้', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber4Id').value || ' - ', size: 'sm', color: '#32CD32', align: 'end', flex: 2 }
+                            { type: 'text', text: 'ยอมรับ', size: 'sm', color: '#32CD32', align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     },
@@ -227,7 +231,7 @@ async function sendFlexMessage() {
                         layout: 'horizontal',
                         contents: [
                             { type: 'text', text: 'ใบเสร็จรับเงิน', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber5Id').value || ' - ', size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
+                            { type: 'text', text: 'ไม่ยอมรับ', size: 'sm', color: '#FF0000', align: 'end', flex: 2 }
                         ],
                         margin: 'sm'
                     }
