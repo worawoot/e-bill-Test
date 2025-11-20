@@ -132,6 +132,7 @@ let loadingOverlay = document.getElementById("loadingOverlay");
 
 // ตัวแปรเก็บ URL รูปจาก LINE
 let lineProfileUrl = "";
+let defaultImageUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
@@ -430,9 +431,10 @@ submitBtn.addEventListener('click', async (event) => {
                     keynumber5Id: keynumber5IdInput.checked
                 };
             } else if (lineProfileUrl) {
-                // กรณี 2: ไม่ได้อัพโหลดรูป แต่มีรูปจาก LINE -> ส่ง pictureUrl ไปบันทึก
+                // กรณี 2 และ 3: ใช้รูป LINE หรือ Default -> ส่งเป็น URL ตรงๆ (ไม่ต้องแปลง Base64 เพื่อเลี่ยง CORS)
+				let finalPictureUrl = lineProfileUrl || defaultImageUrl;
                 obj = {
-                    pictureUrl: lineProfileUrl, // ส่ง URL แทน Base64
+                   	pictureUrl: finalPictureUrl,
                     userlineId: userlineIdInput.value,
                     nameId: nameIdInput.value,
                     keynumberId: keynumberIdInput.value,
@@ -441,26 +443,9 @@ submitBtn.addEventListener('click', async (event) => {
                     keynumber4Id: keynumber4IdInput.checked,
                     keynumber5Id: keynumber5IdInput.checked
                 };
-            } else {
-                // กรณี 3: ไม่มีรูปอะไรเลย -> ใช้ Default Placeholder (Base64)
-                let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-                let blob = await response.blob();
-                let base64 = await getBase64(blob);
-                
-                obj = {
-                    base64: base64,
-                    type: "image/png",
-                    name: "Avatar.png",
-                    userlineId: userlineIdInput.value,
-                    nameId: nameIdInput.value,
-                    keynumberId: keynumberIdInput.value,
-                    keynumber2Id: keynumber2IdInput.value,
-                    keynumber3Id: keynumber3IdInput.value,
-                    keynumber4Id: keynumber4IdInput.checked,
-                    keynumber5Id: keynumber5IdInput.checked
-                };
-            }   
+            } 
 
+			// ส่งข้อมูลไป Google Script
 			let response = await fetch(WEB_APP_URL, {
                 method: "POST",
                 body: JSON.stringify(obj)
