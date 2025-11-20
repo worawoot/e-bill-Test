@@ -13,10 +13,32 @@
     .form-checkbox:checked {
       background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
     }
+
+	/* Loading Overlay */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }		
   	</style>
 	
 </head>
 <body class="bg-slate-100 min-h-screen">
+
+<!-- Loading Spinner -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
+    <p class="text-gray-600 font-semibold">กำลังบันทึกข้อมูลและส่งไลน์...</p>
+</div>
+	
 <div class="max-w-md m-auto p-2">
         <form>
             <div class="bg-white rounded-lg p-10">    
@@ -102,12 +124,16 @@ window.onload = function () {
 
 // ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
 async function initializeLiff() {
-    await liff.init({ liffId: `${LIFF_ID}` });
-
-    if (liff.isLoggedIn()) {
-        getUserProfile();
-    } else {
-        liff.login();
+	try {
+    	await liff.init({ liffId: `${LIFF_ID}` });
+    	if (liff.isLoggedIn()) {
+        	getUserProfile();
+    	} else {
+        	liff.login();
+		}
+    }catch (err) {
+        console.error('LIFF Init failed', err);
+        Swal.fire('Error', 'ไม่สามารถเชื่อมต่อกับ LINE ได้', 'error');
     }
 }
 
@@ -123,6 +149,12 @@ async function getUserProfile() {
 
 // ฟังก์ชันสำหรับส่งข้อความ Flex
 async function sendFlexMessage() {
+
+	// ตรวจสอบว่าเปิดใน LINE หรือไม่
+    if (!liff.isInClient()) {
+        console.warn('Cannot send message: Not in LINE Client (External Browser)');
+        return; // ถ้าเปิดใน Chrome/Safari จะข้ามขั้นตอนนี้ไป
+    }
 
 	// ตรวจสอบสถานะ Checkbox และกำหนดข้อความ
     let statusBill = keynumber4IdInput.checked ? 'รับ' : 'ไม่รับ';
@@ -256,7 +288,14 @@ async function sendFlexMessage() {
         }
     };
 
-    await liff.sendMessages([flexMessage]);
+	try {
+        await liff.sendMessages([flexMessage]);
+        console.log("Flex message sent");
+    } catch (error) {
+        console.error("Error sending flex message:", error);
+        // ไม่ throw error เพื่อให้ระบบทำงานต่อได้แม้ส่งไลน์ไม่ผ่าน
+    }
+    
 }
 let url = `${WEB_APP_URL}`;
 let fileInput = document.getElementById("file");
@@ -285,11 +324,9 @@ function previewImage() {
     if (fileInput.files.length > 0) {
         let file = fileInput.files[0];
         let reader = new FileReader();
-
         reader.onload = function(e) {
             imgPreview.src = e.target.result;
         };
-
         reader.readAsDataURL(file);
     } else {
         imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
@@ -314,8 +351,21 @@ function validateForm() {
     if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber3Id === '' || keynumber4Id === '' || keynumber5Id === '') {
         return false;
     }
-
     return true;
+}
+
+// ฟังก์ชันสำหรับแสดงกล่องยืนยัน
+async function showConfirmationDialog() {
+    const confirmation = await Swal.fire({
+        title: 'ยืนยันการส่งข้อมูล',
+        text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'ใช่, ส่งข้อมูล!',
+        cancelButtonText: 'ไม่, ยกเลิก'
+    });
+ 	//sendFlexMessage();
+    return confirmation.isConfirmed;
 }
 
 // เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
@@ -335,10 +385,10 @@ submitBtn.addEventListener('click', async (event) => {
 
     if (isConfirmed) {
         submitBtn.disabled = true;
+		loadingOverlay.style.display = 'flex'; // Show custom loading overlay
 
         try {
             let obj;
-
             if (fileInput.files.length > 0) {
                 let file = fileInput.files[0];
                 let base64 = await getBase64(file);
@@ -375,64 +425,43 @@ submitBtn.addEventListener('click', async (event) => {
                 };
             }
 
-            Swal.fire({
-                title: '<div class="text-md">กำลังส่งข้อมูล...</div>',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                html: '<div class="swal2-loading"></div>',
-                onBeforeOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            let response = await fetch(url, {
+			let response = await fetch(url, {
                 method: "POST",
                 body: JSON.stringify(obj)
             });
 
-            let data = await response.text();
+			// ไม่จำเป็นต้องรอ text() ถ้าไม่เอามาโชว์ แต่รอเพื่อความชัวร์ว่าเซิร์ฟเวอร์ตอบกลับ
+            await response.text(); 
 
-            Swal.fire({
+			// 4. Send Flex Message (CRITICAL: รอให้ส่งเสร็จก่อน)
+            await sendFlexMessage();
+
+			// 5. Success Alert
+            loadingOverlay.style.display = 'none'; // Hide loading  
+
+			await Swal.fire({
                 title: 'สำเร็จ!',
-                text: 'ส่งข้อมูลลงทะเบียนเรียบร้อย!',
+                text: 'ส่งข้อมูลลงทะเบียนเรียบร้อย',
                 icon: 'success',
-                confirmButtonText: 'ปิด',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    liff.closeWindow();
-                }
+                confirmButtonText: 'ปิดหน้าต่าง',
+                allowOutsideClick: false
             });
-            sendFlexMessage();
-            console.log(data);
+
+            // 6. Close Window
+            liff.closeWindow();
+
         } catch (error) {
+            loadingOverlay.style.display = 'none';
+            console.error(error);
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
+                title: 'เกิดข้อผิดพลาด',
+                text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่ภายหลัง',
             });
-
-            console.error(error);
-        } finally {
             submitBtn.disabled = false;
-        }
-    } else {
-        Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info');
-    }
+        } 
+  }
 });
-
-// ฟังก์ชันสำหรับแสดงกล่องยืนยัน
-async function showConfirmationDialog() {
-    const confirmation = await Swal.fire({
-        title: 'ยืนยันการส่งข้อมูล',
-        text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'ใช่, ส่งข้อมูล!',
-        cancelButtonText: 'ไม่, ยกเลิก'
-    });
- 	//sendFlexMessage();
-    return confirmation.isConfirmed;
-}
 </script>
 </body>
 </html>
