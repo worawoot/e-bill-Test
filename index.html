@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียน</title>
+    <title>ลงทะเบียน MWA e-Bill</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -63,17 +63,17 @@
         			</label>
 					
                 	<div class="flex items-center">
-                    	<input type="checkbox" id="saveInfo" name="saveInfo"
+                    	<input type="checkbox" id="keynumber4Id" name="keynumber4Id"
                         	class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
-                    	<label for="saveInfo" class="ml-2 block text-sm font-semibold text-gray-700">
+                    	<label for="keynumber4Id" class="ml-2 block text-sm font-semibold text-gray-700">
                         	ใบแจ้งค่าน้ำประปา (e-Bill)
                     	</label>
                 	</div>
 
 					<div class="flex items-center">
-                    	<input type="checkbox" id="saveInfo" name="saveInfo"
+                    	<input type="checkbox" id="keynumber5Id" name="keynumber5Id"
                         	class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
-                    	<label for="saveInfo" class="ml-2 block text-sm font-semibold text-gray-700">
+                    	<label for="keynumber5Id" class="ml-2 block text-sm font-semibold text-gray-700">
                         	ใบกำกับภาษี (e-Tax Invoice)
                     	</label>
                 	</div>
@@ -260,6 +260,8 @@ let keynumberIdInput = document.getElementById("keynumberId");
 let keynumber2IdInput = document.getElementById("keynumber2Id");
 let submitBtn = document.getElementById("submitBtn");
 let keynumber3IdInput = document.getElementById("keynumber3Id");
+let keynumber4IdInput = document.getElementById("keynumber4Id");
+let keynumber5IdInput = document.getElementById("keynumber5Id");
 
 // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
 function getBase64(file) {
@@ -299,8 +301,10 @@ function validateForm() {
     const keynumberId = keynumberIdInput.value.trim();
     //const keynumber2Id = keynumber2IdInput.value.trim();
 	const keynumber3Id = keynumber3IdInput.value.trim();
+	const keynumber4Id = keynumber4IdInput.value.trim();
+	const keynumber5Id = keynumber5IdInput.value.trim();
 
-    if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber3Id === '' ) {
+    if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber3Id === '' || keynumber4Id === '' || keynumber5Id === '') {
         return false;
     }
 
@@ -341,7 +345,9 @@ submitBtn.addEventListener('click', async (event) => {
                     nameId: nameIdInput.value,
                     keynumberId: keynumberIdInput.value,
                     //keynumber2Id: keynumber2IdInput.value,
-					keynumber3Id: keynumber3IdInput.value
+					keynumber3Id: keynumber3IdInput.value,
+					keynumber4Id: keynumber4IdInput.value,
+					keynumber5Id: keynumber5IdInput.value
                 };
             } else {
                 let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
@@ -356,7 +362,9 @@ submitBtn.addEventListener('click', async (event) => {
                     nameId: nameIdInput.value,
                     keynumberId: keynumberIdInput.value,
                     keynumber2Id: keynumber2IdInput.value,
-					keynumber3Id: keynumber3IdInput.value
+					keynumber3Id: keynumber3IdInput.value,
+					keynumber4Id: keynumber4IdInput.value,
+					keynumber5Id: keynumber5IdInput.value
                 };
             }
 
