@@ -44,19 +44,18 @@
             <div class="bg-white rounded-lg p-10">    
                 <div class="mb-5 text-center">
                     <div class="mx-auto w-32 h-32 mb-2 border rounded-lg relative bg-slate-100 mb-4 shadow-inset">
-                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
-                    </div>
-					<!--
+                        <!-- รูป Preview เริ่มต้น -->
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Profile Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
+                    </div>					
                     <label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
-                        อัพโหลดรูป
+                        อัพโหลดรูปใหม่
                         <input type="file" id="file" name="file" accept="image/*" class="hidden">
                     </label>
-                     <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">หรือใช้รูปโปรไฟล์เดิมจาก LINE</div> 
-					-->
+                     <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">หรือใช้รูปโปรไฟล์เดิมจาก LINE</div> 					
                 </div>
 				
-                <div class="flex flex-col">
-                <div class="mb-4">
+                <div class="flex flex-col">            
+				<div class="mb-4">
                     <input type="text" class="input-field w-full  bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="lineId" name="userlineId" readonly>
                 </div>
 
@@ -165,10 +164,10 @@ async function getUserProfile() {
 		// เพิ่มการแสดงชื่อ Display Name
         // document.getElementById('displayName').value = profile.displayName; 
 
-		// *** ส่วนที่แก้ไข: ดึงรูปโปรไฟล์มาแสดง ***
+		// --- แก้ไข: ดึงรูปจาก LINE มาแสดง ---
         if (profile.pictureUrl) {
             imgPreview.src = profile.pictureUrl;
-            lineProfilePictureUrl = profile.pictureUrl; // เก็บค่าไว้ใช้ตอน Submit
+            lineProfileUrl = profile.pictureUrl; // เก็บค่าไว้ใช้ตอนส่งข้อมูล
         }
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
@@ -320,8 +319,7 @@ async function sendFlexMessage() {
         await liff.sendMessages([flexMessage]);
         console.log("Flex message sent");
     } catch (error) {
-        console.error("Error sending flex message:", error);
-        // ไม่ throw error เพื่อให้ระบบทำงานต่อได้แม้ส่งไลน์ไม่ผ่าน
+        console.error("Error sending flex message:", error);        
     }
     
 }
@@ -346,9 +344,9 @@ function previewImage() {
         };
         reader.readAsDataURL(file);
     } else {
-        // ถ้า user ยกเลิกการเลือกไฟล์ ให้กลับไปใช้รูปไลน์ (ถ้ามี)
-        if (lineProfilePictureUrl) {
-            imgPreview.src = lineProfilePictureUrl;
+        // ถ้าไม่ได้เลือกไฟล์ และมีรููปไลน์ ให้กลับไปใช้รูปไลน์
+        if(lineProfileUrl) {
+            imgPreview.src = lineProfileUrl;
         } else {
             imgPreview.src = defaultImageUrl;
         }
@@ -414,11 +412,11 @@ submitBtn.addEventListener('click', async (event) => {
         try {
             let obj;
 
-			 // ตรวจสอบว่ามีการอัพโหลดรูปใหม่หรือไม่
+			 // ตรวจสอบว่ามีการอัพโหลดไฟล์ใหม่หรือไม่
             if (fileInput.files.length > 0) {
+                // กรณี 1: ผู้ใช้เลือกอัพโหลดรูปใหม่ -> ส่ง Base64
                 let file = fileInput.files[0];
                 let base64 = await getBase64(file);
-                imgPreview.src = `data:${file.type};base64,${base64}`;
 
                 obj = {
                     base64: base64,
@@ -433,9 +431,8 @@ submitBtn.addEventListener('click', async (event) => {
 					keynumber5Id: keynumber5IdInput.checked
                 };
             } else {
-                let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-                let blob = await response.blob();
-                let base64 = await getBase64(blob);
+                // กรณี 2 และ 3: ใช้รูป LINE หรือ Default -> ส่งเป็น URL ตรงๆ (ไม่ต้องแปลง Base64 เพื่อเลี่ยง CORS)
+                let finalPictureUrl = lineProfileUrl || defaultImageUrl;
                 
                 obj = {
                     base64: base64,
