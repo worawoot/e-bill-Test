@@ -48,10 +48,10 @@
                         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Profile Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
                     </div>					
                     <label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
-                        อัพโหลดรูปใหม่
+                        อัพโหลดรูป
                         <input type="file" id="file" name="file" accept="image/*" class="hidden">
                     </label>
-                     <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">หรือใช้รูปโปรไฟล์เดิมจาก LINE</div> 					
+                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div> 					
                 </div>
 				
                 <div class="flex flex-col">            
@@ -118,6 +118,9 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe
   // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
 const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
 
+// URL รูปภาพเริ่มต้น (กรณีไม่มี Profile Line)
+const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+
 let url = `${WEB_APP_URL}`;
 let fileInput = document.getElementById("file");
 let imgPreview = document.getElementById("preview");
@@ -130,10 +133,8 @@ let keynumber3IdInput = document.getElementById("keynumber3Id");
 let keynumber4IdInput = document.getElementById("keynumber4Id");
 let keynumber5IdInput = document.getElementById("keynumber5Id");
 
-// ตัวแปรเก็บ URL รูปโปรไฟล์จาก LINE
-let lineProfilePictureUrl = ""; 
-// รูป Default กรณีไม่มีรูปไลน์และไม่อัพโหลด
-const defaultImageUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+// ตัวแปรสำหรับเก็บ URL รูปปัจจุบัน (เริ่มที่ Default)
+let currentProfileImage = DEFAULT_AVATAR;
 
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
@@ -160,14 +161,12 @@ async function getUserProfile() {
     try {
         const profile = await liff.getProfile();
         document.getElementById('userlineId').value = profile.userId;
+		//document.getElementById('nameId').value = profile.displayName; // (Option) เผื่ออยากใส่ชื่อ Line อัตโนมัติ		 
 
-		// เพิ่มการแสดงชื่อ Display Name
-        // document.getElementById('displayName').value = profile.displayName; 
-
-		// --- แก้ไข: ดึงรูปจาก LINE มาแสดง ---
+		// --- ส่วนที่แก้ไข: ดึงรูปโปรไฟล์ ---
         if (profile.pictureUrl) {
-            imgPreview.src = profile.pictureUrl;
-            lineProfileUrl = profile.pictureUrl; // เก็บค่าไว้ใช้ตอนส่งข้อมูล
+            currentProfileImage = profile.pictureUrl; // เก็บค่า URL รูปโปรไฟล์ไว้
+            imgPreview.src = currentProfileImage; // แสดงผลรูป
         }
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
@@ -344,12 +343,8 @@ function previewImage() {
         };
         reader.readAsDataURL(file);
     } else {
-        // ถ้าไม่ได้เลือกไฟล์ และมีรููปไลน์ ให้กลับไปใช้รูปไลน์
-        if(lineProfileUrl) {
-            imgPreview.src = lineProfileUrl;
-        } else {
-            imgPreview.src = defaultImageUrl;
-        }
+        // --- ส่วนที่แก้ไข: ถ้าไม่ได้เลือกไฟล์ ให้กลับไปใช้รูป Profile (หรือ Default) ---
+        imgPreview.src = currentProfileImage;
     }
 }
 
@@ -431,21 +426,49 @@ submitBtn.addEventListener('click', async (event) => {
 					keynumber5Id: keynumber5IdInput.checked
                 };
             } else {
-                // กรณี 2 และ 3: ใช้รูป LINE หรือ Default -> ส่งเป็น URL ตรงๆ (ไม่ต้องแปลง Base64 เพื่อเลี่ยง CORS)
-                let finalPictureUrl = lineProfileUrl || defaultImageUrl;
+                // --- ส่วนที่แก้ไข: พยายามใช้รูปจาก LINE Profile ---
+                // หมายเหตุ: การ fetch รูปจาก LINE URL โดยตรงอาจติด CORS ได้ในบาง Browser
+                // จึงต้องมี try-catch เพื่อ fallback ไปหารูป Default หากดึงไม่ได้
+                let imageUrlToFetch = currentProfileImage;
+                let imageName = "Profile.jpg";
                 
-                obj = {
-                    base64: base64,
-                    type: "image/png",
-                    name: "Avatar.png",
-                    userlineId: userlineIdInput.value,
-                    nameId: nameIdInput.value,
-                    keynumberId: keynumberIdInput.value,
-                    keynumber2Id: keynumber2IdInput.value,
-					keynumber3Id: keynumber3IdInput.value,
-					keynumber4Id: keynumber4IdInput.checked,
-					keynumber5Id: keynumber5IdInput.checked
-                };
+                try {
+                    let response = await fetch(imageUrlToFetch);
+                    let blob = await response.blob();
+                    let base64 = await getBase64(blob);
+                    
+                    obj = {
+                        base64: base64,
+                        type: blob.type, // หรือ "image/jpeg"
+                        name: imageName,
+                        userlineId: userlineIdInput.value,
+                        nameId: nameIdInput.value,
+                        keynumberId: keynumberIdInput.value,
+                        keynumber2Id: keynumber2IdInput.value,
+                        keynumber3Id: keynumber3IdInput.value,
+                        keynumber4Id: keynumber4IdInput.checked,
+                        keynumber5Id: keynumber5IdInput.checked
+                    };
+                } catch (corsError) {
+                    console.warn("Cannot fetch Profile Image due to CORS, using Default Avatar instead.");
+                    // Fallback: ถ้าดึงรูปไลน์ไม่ได้ ให้ใช้รูป Default
+                    let response = await fetch(DEFAULT_AVATAR);
+                    let blob = await response.blob();
+                    let base64 = await getBase64(blob);
+
+                    obj = {
+                        base64: base64,
+                        type: "image/png",
+                        name: "Avatar.png",
+                        userlineId: userlineIdInput.value,
+                        nameId: nameIdInput.value,
+                        keynumberId: keynumberIdInput.value,
+                        keynumber2Id: keynumber2IdInput.value,
+                        keynumber3Id: keynumber3IdInput.value,
+                        keynumber4Id: keynumber4IdInput.checked,
+                        keynumber5Id: keynumber5IdInput.checked
+                    };
+                }
             }
 
 			let response = await fetch(url, {
