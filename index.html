@@ -95,11 +95,6 @@ const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe
   // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
 const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
 
-// --- START: NEW CHECKBOX VALIDATION ---
-// ดึงค่าการ check
-const keynumber4IdCheck = document.getElementById('keynumber4Id').checked;
-const keynumber5IdCheck = document.getElementById('keynumber5Id').checked;
-
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
     initializeLiff();
@@ -350,8 +345,8 @@ submitBtn.addEventListener('click', async (event) => {
                     keynumberId: keynumberIdInput.value,
                     //keynumber2Id: keynumber2IdInput.value,
 					keynumber3Id: keynumber3IdInput.value,
-					keynumber4Id: keynumber4IdInput.value,
-					keynumber5Id: keynumber5IdInput.value
+					keynumber4Id: keynumber4IdInput.checked,
+					keynumber5Id: keynumber5IdInput.checked
                 };
             } else {
                 let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
@@ -367,8 +362,8 @@ submitBtn.addEventListener('click', async (event) => {
                     keynumberId: keynumberIdInput.value,
                     keynumber2Id: keynumber2IdInput.value,
 					keynumber3Id: keynumber3IdInput.value,
-					keynumber4Id: keynumber4IdInput.value,
-					keynumber5Id: keynumber5IdInput.value
+					keynumber4Id: keynumber4IdInput.checked,
+					keynumber5Id: keynumber5IdInput.checked
                 };
             }
 
