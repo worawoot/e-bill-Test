@@ -8,57 +8,54 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-	<style>
-
-	/* ตั้งค่า Font ให้เป็น IBM Plex Sans Thai และน้ำหนัก SemiBold (600) ทั้งหน้า */
+    <style>
+    /* ตั้งค่า Font ให้เป็น IBM Plex Sans Thai */
     body {
         font-family: 'IBM Plex Sans Thai', sans-serif !important;
-        font-weight: 600 !important; /* บังคับเป็น SemiBold */
+        font-weight: 600 !important;
     }
-		
-    /* Custom style สำหรับ Checkbox ที่ดูดีขึ้น */
+        
+    /* Custom style สำหรับ Checkbox */
     .form-checkbox:checked {
       background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
     }
 
-	/* Loading Overlay */
+    /* Loading Overlay */
     .loading-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.9); /* เพิ่มความทึบเล็กน้อยเพื่อปิดบังฟอร์มขณะโหลด */
+        background: rgba(255, 255, 255, 0.9);
         z-index: 9999;
-        display: none; /* เริ่มต้นซ่อนไว้ จะเปิดด้วย JS */
+        display: none;
         align-items: center;
         justify-content: center;
         flex-direction: column;
-    }       
-  	</style>
-	
+    }        
+    </style>
+    
 </head>
 <body class="bg-slate-100 min-h-screen">
 
-<!-- Loading Spinner -->
 <div id="loadingOverlay" class="loading-overlay">
     <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
-    <!-- เพิ่ม id ให้ข้อความเพื่อเปลี่ยนข้อความได้ -->
     <p id="loadingText" class="text-gray-600 font-semibold">กรุณารอสักครู่...</p>
 </div>
-	
+    
 <div class="max-w-md m-auto p-2">
         <form>
             <div class="bg-white rounded-lg p-10 shadow-md"> 
 
-				<div class="text-center mb-6">
+                <div class="text-center mb-6">
                     <h1 class="text-2xl font-bold text-blue-600">ลงทะเบียน MWA e-Bill</h1>                    
                 </div>
-				
+                
                 <div class="mb-5 text-center">
                     <div class="mx-auto w-36 h-36 mb-4 relative">
                         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" 
@@ -67,83 +64,76 @@
                              class="w-36 h-36 object-cover rounded-full border-4 border-white shadow-lg mx-auto bg-slate-100">
                     </div>
 
-					<div id="displayName" class="text-xl text-slate-700 font-bold mt-3 mb-2"></div>
-					
-					<!-- ซ่อนปุ่มอัพโหลดและข้อความ -->
-                   	<label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300 hidden">
+                    <div id="displayName" class="text-xl text-slate-700 font-bold mt-3 mb-2"></div>
+                    
+                    <label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300 hidden">
                         อัพโหลดรูป
                         <input type="file" id="file" name="file" accept="image/*" class="hidden">
                     </label>
-                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1 hidden">คลิกเพื่ออัพโหลดรูปของคุณ</div> 					
+                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1 hidden">คลิกเพื่ออัพโหลดรูปของคุณ</div>                     
                 </div>
-				
+                
                 <div class="flex flex-col">            
-				<div class="mb-4">
-                    <!-- <input type="text" class="input-field w-full  bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="lineId" name="userlineId" readonly> -->
-					<input type="text" class="hidden" id="userlineId" placeholder="lineId" name="userlineId" readonly>
+                <div class="mb-4">
+                    <input type="text" class="hidden" id="userlineId" placeholder="lineId" name="userlineId" readonly>
                 </div>
 
-				<div class="mb-4">
-					<label for="keynumber3Id" class="block text-sm font-semibold text-gray-700 mb-2">ทะเบียนผู้ใช้น้ำ <span style="color: #f90202">*</span></label>
+                <div class="mb-4">
+                    <label for="keynumber3Id" class="block text-sm font-semibold text-gray-700 mb-2">ทะเบียนผู้ใช้น้ำ <span style="color: #f90202">*</span></label>
                     <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber3Id" placeholder="กรอกทะเบียนผู้ใช้น้ำ 8 หลัก" name="keynumber3Id" required>
                 </div>
-					
+                    
                 <div class="mb-4">
-					<label for="nameId" class="block text-sm font-semibold text-gray-700 mb-2">ชื่อ-นามสกุล <span style="color: #f90202">*</span></label>
+                    <label for="nameId" class="block text-sm font-semibold text-gray-700 mb-2">ชื่อ-นามสกุล <span style="color: #f90202">*</span></label>
                     <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="nameId" placeholder="กรอกชื่อและนามสกุล" name="nameId" required>
                 </div>
-					
+                    
                 <div class="mb-4">
-					<label for="keynumberId" class="block text-sm font-semibold text-gray-700 mb-2">เบอร์โทรศัพท์ (10 หลัก) <span style="color: #f90202">*</span></label>
-					<!-- เพิ่ม maxlength และ inputmode -->
+                    <label for="keynumberId" class="block text-sm font-semibold text-gray-700 mb-2">เบอร์โทรศัพท์ (10 หลัก) <span style="color: #f90202">*</span></label>
                     <input type="tel" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumberId" placeholder="เช่น 0812345678" pattern="^0\d{9}$" title="กรุณากรอกเบอร์โทรศัพท์ 10 หลัก ที่ขึ้นต้นด้วย 0" name="keynumberId" maxlength="10" inputmode="numeric" required>
                 </div>
-					
+                    
                 <div class="mb-6">
-					<label for="keynumber2Id" class="block text-sm font-semibold text-gray-700 mb-2">E-mail </label>
+                    <label for="keynumber2Id" class="block text-sm font-semibold text-gray-700 mb-2">E-mail </label>
                     <input type="email" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber2Id" placeholder="example@mail.com" name="keynumber2Id" >
                 </div>
 
-				<!-- Checkbox ใบแจ้งหนี้ -->
-				<div class="mb-6 space-y-3">
-        			<label class="block text-sm font-semibold text-gray-700 mb-2">
-          				เลือกประเภทเอกสารที่ต้องการรับ (e-Service) <span style="color: #f90202">*</span>
-        			</label>
-					
-                	<div class="flex items-center">
-                    	<input type="checkbox" id="keynumber4Id" name="keynumber4Id"
-                        	class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
-                    	<label for="keynumber4Id" class="ml-2 block text-sm font-semibold text-gray-700">
-                        	ใบแจ้งค่าน้ำประปา (e-Bill)
-                    	</label>
-                	</div>
+                <div class="mb-6 space-y-3">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        เลือกประเภทเอกสารที่ต้องการรับ (e-Service) <span style="color: #f90202">*</span>
+                    </label>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="keynumber4Id" name="keynumber4Id"
+                            class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
+                        <label for="keynumber4Id" class="ml-2 block text-sm font-semibold text-gray-700">
+                            ใบแจ้งค่าน้ำประปา (e-Bill)
+                        </label>
+                    </div>
 
-					<div class="flex items-center">
-                    	<input type="checkbox" id="keynumber5Id" name="keynumber5Id"
-                        	class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
-                    	<label for="keynumber5Id" class="ml-2 block text-sm font-semibold text-gray-700">
-                        	ใบกำกับภาษี (e-Tax Invoice)
-                    	</label>
-                	</div>
-				</div>
-					
+                    <div class="flex items-center">
+                        <input type="checkbox" id="keynumber5Id" name="keynumber5Id"
+                            class="form-checkbox h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" checked>
+                        <label for="keynumber5Id" class="ml-2 block text-sm font-semibold text-gray-700">
+                            ใบกำกับภาษี (e-Tax Invoice)
+                        </label>
+                    </div>
+                </div>
+                    
                 </div>
                 <button type="button" id="submitBtn" class="bg-blue-500 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">ส่งข้อมูลลงทะเบียน</button>
-				
-				<footer class="text-center text-sm text-gray-600 mt-8">Copyright © 2025 WORAWOOT PHAENGPETCH</footer>
-            </div>			
-			
+                
+                <footer class="text-center text-sm text-gray-600 mt-8">Copyright © 2025 WORAWOOT PHAENGPETCH</footer>
+            </div>          
+            
         </form>
 </div>
 <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 <script>
 
-// ลิ้งจาก ระบบสมาชิก
 const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzKKmAmPlOXxSeALUDe3fr3YLBYXCwEwfNoJbJelKUeg-kvQcQpID7M0qPHVXIN0aUc/exec'; 
-  // Liff ไอดีไล์เรียกใช้หน้าข้อมูลส่วนตัว
-const LIFF_ID = '1657790891-40VQpd6O'; // LIFF ID
+const LIFF_ID = '1657790891-40VQpd6O';
 
-// URL รูปภาพเริ่มต้น (กรณีไม่มี Profile Line)
 const DEFAULT_AVATAR = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
 let url = `${WEB_APP_URL}`;
@@ -158,219 +148,371 @@ let keynumber3IdInput = document.getElementById("keynumber3Id");
 let keynumber4IdInput = document.getElementById("keynumber4Id");
 let keynumber5IdInput = document.getElementById("keynumber5Id");
 
-// ตัวแปรจัดการ Loading Overlay
 const loadingOverlay = document.getElementById('loadingOverlay');
 const loadingText = document.getElementById('loadingText');
 
-// ตัวแปรสำหรับเก็บ URL รูปปัจจุบัน (เริ่มที่ Default)
 let currentProfileImage = DEFAULT_AVATAR;
 
-// ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
-	// --- 1. แสดง Loading ทันทีที่เปิดหน้าเว็บ ---
     loadingText.innerText = "กำลังโหลดข้อมูลสมาชิก...";
     loadingOverlay.style.display = 'flex';
-    
     initializeLiff();
 };
 
-// ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
 async function initializeLiff() {
-	try {
-    	await liff.init({ liffId: `${LIFF_ID}` });
-    	if (liff.isLoggedIn()) {
-        	await getUserProfile(); // รอให้ดึงโปรไฟล์เสร็จ
-    	} else {
-        	liff.login();
-		}
+    try {
+        await liff.init({ liffId: `${LIFF_ID}` });
+        if (liff.isLoggedIn()) {
+            await getUserProfile();
+        } else {
+            liff.login();
+        }
     }catch (err) {
         console.error('LIFF Init failed', err);
-		// ปิด Loading หากเกิด Error เพื่อให้ user เห็นข้อความ
         loadingOverlay.style.display = 'none';
         Swal.fire('Error', 'ไม่สามารถเชื่อมต่อกับ LINE ได้', 'error');
     }
 }
 
-// ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ของผู้ใช้
 async function getUserProfile() {
     try {
         const profile = await liff.getProfile();
         document.getElementById('userlineId').value = profile.userId;
-		//document.getElementById('nameId').value = profile.displayName; // (Option) เผื่ออยากใส่ชื่อ Line อัตโนมัติ
 
-		// --- ส่วนที่แก้ไข: แสดง displayName ใต้รูปภาพ ---
         if (profile.displayName) {
             document.getElementById('displayName').innerText = profile.displayName;
-            //document.getElementById('nameId').value = profile.displayName; // แถม: กรอกลง input ให้ด้วย
         }
 
-		// --- ส่วนที่แก้ไข: ดึงรูปโปรไฟล์ ---
         if (profile.pictureUrl) {
-            currentProfileImage = profile.pictureUrl; // เก็บค่า URL รูปโปรไฟล์ไว้
-            imgPreview.src = currentProfileImage; // แสดงผลรูป
+            currentProfileImage = profile.pictureUrl;
+            imgPreview.src = currentProfileImage;
         }
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
     } finally {
-        // --- 2. ปิด Loading เมื่อทำงานทุกอย่างเสร็จสิ้น (ไม่ว่าจะ error หรือไม่) ---
         setTimeout(() => {
             loadingOverlay.style.display = 'none';
-        }, 500); // หน่วงเวลาเล็กน้อยเพื่อความนุ่มนวล
+        }, 500);
     }
 }
 
-// ฟังก์ชันสำหรับส่งข้อความ Flex
+// --- START: ส่วนที่แก้ไข Flex Message ใหม่ ---
 async function sendFlexMessage() {
 
-	// ตรวจสอบว่าเปิดใน LINE หรือไม่
     if (!liff.isInClient()) {
         console.warn('Cannot send message: Not in LINE Client (External Browser)');
-        return; // ถ้าเปิดใน Chrome/Safari จะข้ามขั้นตอนนี้ไป
+        return; 
     }
 
-	// ตรวจสอบสถานะ Checkbox และกำหนดข้อความ
-    let statusBill = keynumber4IdInput.checked ? 'รับ' : 'ไม่รับ';
-    let colorBill = keynumber4IdInput.checked ? '#32CD32' : '#FF0000'; // เขียวถ้า "รับ", แดงถ้า "ไม่รับ"
+    // Logic การแสดงผล Badge สถานะ
+    const isBill = keynumber4IdInput.checked;
+    const textBill = isBill ? 'สมัครใช้บริการ' : 'ไม่สมัคร';
+    const colorBillText = isBill ? '#1DB446' : '#aaaaaa';
+    const colorBillBg = isBill ? '#E8F7EC' : '#f0f0f0';
 
-    let statusTax = keynumber5IdInput.checked ? 'รับ' : 'ไม่รับ';
-    let colorTax = keynumber5IdInput.checked ? '#32CD32' : '#FF0000';
-	
+    const isTax = keynumber5IdInput.checked;
+    const textTax = isTax ? 'สมัครใช้บริการ' : 'ไม่สมัคร';
+    const colorTaxText = isTax ? '#1DB446' : '#aaaaaa';
+    const colorTaxBg = isTax ? '#E8F7EC' : '#f0f0f0';
+
+    // จัด Format เบอร์โทรศัพท์ (081-234-5678) เพื่อความสวยงาม
+    let rawPhone = keynumberIdInput.value;
+    let formattedPhone = rawPhone.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+
     const flexMessage = {
-        type: 'flex',
-        altText: 'ส่งข้อมูลลงทะเบียนเรียบร้อย',
-        contents: {
-            type: 'bubble',
-            styles: {
-                header: { backgroundColor: '#00C2F3' },
-                footer: { backgroundColor: '#00C2F3' },
-                body: { backgroundColor: '#ffffff' }
+      "type": "flex",
+      "altText": "ลงทะเบียนสำเร็จ: MWA e-Bill",
+      "contents": {
+        "type": "bubble",
+        "size": "giga",
+        "header": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "vertical",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "✔",
+                  "size": "3xl",
+                  "color": "#ffffff",
+                  "align": "center"
+                }
+              ],
+              "backgroundColor": "#32CD32",
+              "cornerRadius": "100px",
+              "width": "60px",
+              "height": "60px",
+              "justifyContent": "center",
+              "margin": "md"
             },
-            header: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
-                        type: 'text',
-                        text: 'ลงทะเบียน MWA e-Bill',
-                        weight: 'bold',
-                        size: 'xl',
-                        color: '#ffffff',
-                        align: 'center'
-                    }
-                ]
+            {
+              "type": "text",
+              "text": "ลงทะเบียนสำเร็จ",
+              "weight": "bold",
+              "size": "xl",
+              "color": "#ffffff",
+              "margin": "md"
             },
-            body: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
-                        type: 'box',
-                        layout: 'vertical',
-                        contents: [
-                            {
-                                type: 'image',
-                                url: 'https://firebasestorage.googleapis.com/v0/b/webapp-c8c38.appspot.com/o/th-full-white.png?alt=media&token=88a41cdb-27fd-4c98-8d11-a390ef103163',
-                                size: 'xxs',
-                                aspectMode: 'fit',
-                                align: 'start'
-                            },
-                            {
-                                type: 'text',
-                                text: 'สำนักงานประปาสาขาลาดพร้าว',
-                                weight: 'bold',
-                                size: '16px',
-                                margin: 'md',
-                                position: 'absolute',
-                                offsetStart: '50px',
-                                offsetTop: 'md',
-                                color: '#555555'
-                            }
-                        ],
-                        spacing: 'sm'
-                    },
-                    {
-                        type: 'box',
-                        layout: 'horizontal',
-                        contents: [
-                            { type: 'text', text: 'ทะเบียนผู้ใช้น้ำ', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber3Id').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
-                        ],
-                        margin: 'lg'
-                    },
-                    {
-                        type: 'box',
-                        layout: 'horizontal',
-                        contents: [
-                            { type: 'text', text: 'ชื่อ-สกุล', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('nameId').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
-                        ],
-                        margin: 'sm'
-                    },
-                    {
-                        type: 'box',
-                        layout: 'horizontal',
-                        contents: [
-                            { type: 'text', text: 'เบอร์โทรศัพท์', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumberId').value, size: 'sm', color: '#111111', align: 'end', flex: 2 }
-                        ],
-                        margin: 'sm'
-                    },
-                    {
-                        type: 'box',
-                        layout: 'horizontal',
-                        contents: [
-                            { type: 'text', text: 'อีเมล', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: document.getElementById('keynumber2Id').value || ' - ', size: 'sm', color: '#111111', align: 'end', flex: 4 }
-                        ],
-                        margin: 'sm'
-                    },
-                    {
-                        type: 'box',
-                        layout: 'horizontal',
-                        contents: [
-                            { type: 'text', text: 'ใบแจ้งค่าน้ำประปา(e-Bill)', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: statusBill , size: 'sm', color: colorBill , align: 'end', flex: 0 }
-                        ],
-                        margin: 'sm'
-                    },
-                    {
-                        type: 'box',
-                        layout: 'horizontal',
-                        contents: [
-                            { type: 'text', text: 'ใบกำกับภาษี(e-Tax Invoice)', size: 'sm', color: '#555555', flex: 1 },
-                            { type: 'text', text: statusTax , size: 'sm', color: colorTax , align: 'end', flex: 0 }
-                        ],
-                        margin: 'sm'
-                    }
-                ]
-            },
-            footer: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
-                        type: 'text',
-                        text: 'ส่งข้อมูลเรียบร้อยแล้ว !',
-                        size: 'sm',
-                        color: '#ffffff',
-                        align: 'center'
-                    }
-                ]
+            {
+              "type": "text",
+              "text": "ระบบได้รับข้อมูลของท่านแล้ว",
+              "color": "#ffffffcc",
+              "size": "xs"
             }
+          ],
+          "backgroundColor": "#00C2F3",
+          "paddingAll": "xxl",
+          "alignItems": "center"
+        },
+        "body": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "image",
+                  "url": "https://firebasestorage.googleapis.com/v0/b/webapp-c8c38.appspot.com/o/th-full-white.png?alt=media&token=88a41cdb-27fd-4c98-8d11-a390ef103163",
+                  "size": "xxs",
+                  "aspectMode": "fit",
+                  "flex": 0
+                },
+                {
+                  "type": "text",
+                  "text": "การประปานครหลวง (สาขาลาดพร้าว)",
+                  "weight": "bold",
+                  "size": "xs",
+                  "color": "#999999",
+                  "align": "end",
+                  "gravity": "center",
+                  "flex": 1
+                }
+              ],
+              "margin": "none"
+            },
+            {
+              "type": "separator",
+              "margin": "lg"
+            },
+            {
+              "type": "text",
+              "text": "ข้อมูลผู้ลงทะเบียน",
+              "weight": "bold",
+              "size": "sm",
+              "color": "#00C2F3",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "ทะเบียนผู้ใช้น้ำ",
+                  "size": "sm",
+                  "color": "#555555",
+                  "flex": 2
+                },
+                {
+                  "type": "text",
+                  "text": keynumber3IdInput.value, 
+                  "size": "sm",
+                  "color": "#111111",
+                  "align": "end",
+                  "flex": 3,
+                  "weight": "bold"
+                }
+              ],
+              "margin": "md"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "ชื่อ-สกุล",
+                  "size": "sm",
+                  "color": "#555555",
+                  "flex": 1
+                },
+                {
+                  "type": "text",
+                  "text": nameIdInput.value,
+                  "size": "sm",
+                  "color": "#111111",
+                  "align": "end",
+                  "flex": 2,
+                  "weight": "bold"
+                }
+              ],
+              "margin": "sm"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "เบอร์โทรศัพท์",
+                  "size": "sm",
+                  "color": "#555555",
+                  "flex": 1
+                },
+                {
+                  "type": "text",
+                  "text": formattedPhone,
+                  "size": "sm",
+                  "color": "#111111",
+                  "align": "end",
+                  "flex": 2,
+                  "weight": "bold"
+                }
+              ],
+              "margin": "sm"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "อีเมล",
+                  "size": "sm",
+                  "color": "#555555",
+                  "flex": 1
+                },
+                {
+                  "type": "text",
+                  "text": keynumber2IdInput.value || '-',
+                  "size": "xs",
+                  "color": "#111111",
+                  "align": "end",
+                  "flex": 3,
+                  "wrap": true
+                }
+              ],
+              "margin": "sm"
+            },
+            {
+              "type": "separator",
+              "margin": "lg"
+            },
+            {
+              "type": "text",
+              "text": "สถานะการสมัคร",
+              "weight": "bold",
+              "size": "sm",
+              "color": "#00C2F3",
+              "margin": "lg"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "MWA e-Bill",
+                  "size": "sm",
+                  "color": "#555555",
+                  "gravity": "center",
+                  "flex": 2
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": textBill,
+                      "size": "xs",
+                      "color": colorBillText,
+                      "align": "center",
+                      "weight": "bold"
+                    }
+                  ],
+                  "backgroundColor": colorBillBg,
+                  "cornerRadius": "md",
+                  "paddingAll": "xs",
+                  "flex": 2
+                }
+              ],
+              "margin": "md",
+              "alignItems": "center"
+            },
+            {
+              "type": "box",
+              "layout": "horizontal",
+              "contents": [
+                {
+                  "type": "text",
+                  "text": "e-Tax Invoice",
+                  "size": "sm",
+                  "color": "#555555",
+                  "gravity": "center",
+                  "flex": 2
+                },
+                {
+                  "type": "box",
+                  "layout": "vertical",
+                  "contents": [
+                    {
+                      "type": "text",
+                      "text": textTax,
+                      "size": "xs",
+                      "color": colorTaxText,
+                      "align": "center",
+                      "weight": "bold"
+                    }
+                  ],
+                  "backgroundColor": colorTaxBg,
+                  "cornerRadius": "md",
+                  "paddingAll": "xs",
+                  "flex": 2
+                }
+              ],
+              "margin": "sm",
+              "alignItems": "center"
+            }
+          ],
+          "paddingBottom": "xl"
+        },
+        "footer": {
+          "type": "box",
+          "layout": "vertical",
+          "contents": [
+            {
+              "type": "text",
+              "text": "ขอบคุณที่ใช้บริการ MWA",
+              "size": "xs",
+              "color": "#aaaaaa",
+              "align": "center"
+            }
+          ],
+          "backgroundColor": "#ffffff"
+        },
+        "styles": {
+          "footer": {
+            "separator": true
+          }
         }
+      }
     };
 
-	try {
+    try {
         await liff.sendMessages([flexMessage]);
         console.log("Flex message sent");
     } catch (error) {
         console.error("Error sending flex message:", error); 
-		// ไม่ throw error เพื่อให้ระบบทำงานต่อได้แม้ส่งไลน์ไม่ผ่าน
     }
-    
 }
+// --- END: จบส่วนแก้ไข Flex Message ---
 
-// ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
 function getBase64(file) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
@@ -380,7 +522,6 @@ function getBase64(file) {
     });
 }
 
-// ฟังก์ชันสำหรับแสดงภาพตัวอย่าง
 function previewImage() {
     if (fileInput.files.length > 0) {
         let file = fileInput.files[0];
@@ -390,25 +531,21 @@ function previewImage() {
         };
         reader.readAsDataURL(file);
     } else {
-        // --- ส่วนที่แก้ไข: ถ้าไม่ได้เลือกไฟล์ ให้กลับไปใช้รูป Profile (หรือ Default) ---
         imgPreview.src = currentProfileImage;
     }
 }
 
-// เพิ่ม event listener สำหรับการเปลี่ยนแปลงใน input file
 fileInput.addEventListener('change', () => {
     previewImage();
 });
 
-// ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
 function validateForm() {
     const userlineId = userlineIdInput.value.trim();
     const nameId = nameIdInput.value.trim();
     const keynumberId = keynumberIdInput.value.trim();
-    //const keynumber2Id = keynumber2IdInput.value.trim();
-	const keynumber3Id = keynumber3IdInput.value.trim();
-	const keynumber4Id = keynumber4IdInput.value.trim();
-	const keynumber5Id = keynumber5IdInput.value.trim();
+    const keynumber3Id = keynumber3IdInput.value.trim();
+    const keynumber4Id = keynumber4IdInput.value.trim();
+    const keynumber5Id = keynumber5IdInput.value.trim();
 
     if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber3Id === '' || keynumber4Id === '' || keynumber5Id === '') {
         return false;
@@ -416,7 +553,6 @@ function validateForm() {
     return true;
 }
 
-// ฟังก์ชันสำหรับแสดงกล่องยืนยัน
 async function showConfirmationDialog() {
     const confirmation = await Swal.fire({
         title: 'ยืนยันการส่งข้อมูล',
@@ -428,11 +564,9 @@ async function showConfirmationDialog() {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33'
     });
- 	//sendFlexMessage();
     return confirmation.isConfirmed;
 }
 
-// เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
 submitBtn.addEventListener('click', async (event) => {
     event.preventDefault();
 
@@ -445,7 +579,6 @@ submitBtn.addEventListener('click', async (event) => {
         return;
     }
 
-	// --- เพิ่มส่วนตรวจสอบทะเบียนผู้ใช้น้ำ 8 หลัก (0-9) ---
     const keynumber3Val = keynumber3IdInput.value.trim();
     if (!/^\d{8}$/.test(keynumber3Val)) {
         Swal.fire({
@@ -456,7 +589,6 @@ submitBtn.addEventListener('click', async (event) => {
         return;
     }
 
-	// --- เพิ่มส่วนตรวจสอบเบอร์โทรศัพท์ 10 หลัก (ขึ้นต้นด้วย 0) ---
     const keynumberVal = keynumberIdInput.value.trim();
     if (!/^0\d{9}$/.test(keynumberVal)) {
         Swal.fire({
@@ -466,23 +598,20 @@ submitBtn.addEventListener('click', async (event) => {
         });
         return;
     }
-    // -----------------------------------------------
-	
+    
     const isConfirmed = await showConfirmationDialog();
 
     if (isConfirmed) {
         submitBtn.disabled = true;
-
-		// --- เปลี่ยนข้อความและแสดง Loading สำหรับการบันทึก ---
         loadingText.innerText = "กำลังบันทึกข้อมูล...";
-        loadingOverlay.style.display = 'flex'; 		
+        loadingOverlay.style.display = 'flex';      
 
         try {
-            let obj;			 
+            let obj;             
             if (fileInput.files.length > 0) {               
                 let file = fileInput.files[0];
                 let base64 = await getBase64(file);
-				imgPreview.src = `data:${file.type};base64,${base64}`;
+                imgPreview.src = `data:${file.type};base64,${base64}`;
 
                 obj = {
                     base64: base64,
@@ -491,15 +620,11 @@ submitBtn.addEventListener('click', async (event) => {
                     userlineId: userlineIdInput.value,
                     nameId: nameIdInput.value,
                     keynumberId: keynumberIdInput.value,
-                    //keynumber2Id: keynumber2IdInput.value,
-					keynumber3Id: keynumber3IdInput.value,
-					keynumber4Id: keynumber4IdInput.checked,
-					keynumber5Id: keynumber5IdInput.checked
+                    keynumber3Id: keynumber3IdInput.value,
+                    keynumber4Id: keynumber4IdInput.checked,
+                    keynumber5Id: keynumber5IdInput.checked
                 };
             } else {
-                // --- ส่วนที่แก้ไข: พยายามใช้รูปจาก LINE Profile ---
-                // หมายเหตุ: การ fetch รูปจาก LINE URL โดยตรงอาจติด CORS ได้ในบาง Browser
-                // จึงต้องมี try-catch เพื่อ fallback ไปหารูป Default หากดึงไม่ได้
                 let imageUrlToFetch = currentProfileImage;
                 let imageName = "Profile.jpg";
                 
@@ -510,7 +635,7 @@ submitBtn.addEventListener('click', async (event) => {
                     
                     obj = {
                         base64: base64,
-                        type: blob.type, // หรือ "image/jpeg"
+                        type: blob.type,
                         name: imageName,
                         userlineId: userlineIdInput.value,
                         nameId: nameIdInput.value,
@@ -522,7 +647,6 @@ submitBtn.addEventListener('click', async (event) => {
                     };
                 } catch (corsError) {
                     console.warn("Cannot fetch Profile Image due to CORS, using Default Avatar instead.");
-                    // Fallback: ถ้าดึงรูปไลน์ไม่ได้ ให้ใช้รูป Default
                     let response = await fetch(DEFAULT_AVATAR);
                     let blob = await response.blob();
                     let base64 = await getBase64(blob);
@@ -542,21 +666,17 @@ submitBtn.addEventListener('click', async (event) => {
                 }
             }
 
-			let response = await fetch(url, {
+            let response = await fetch(url, {
                 method: "POST",
                 body: JSON.stringify(obj)
             });
 
-			// ไม่จำเป็นต้องรอ text() ถ้าไม่เอามาโชว์ แต่รอเพื่อความชัวร์ว่าเซิร์ฟเวอร์ตอบกลับ
             await response.text(); 
-
-			// 4. Send Flex Message (CRITICAL: รอให้ส่งเสร็จก่อน)
             await sendFlexMessage();
 
-			// 5. Success Alert
-            loadingOverlay.style.display = 'none'; // Hide loading  
+            loadingOverlay.style.display = 'none';  
 
-			await Swal.fire({
+            await Swal.fire({
                 title: 'สำเร็จ!',
                 text: 'ส่งข้อมูลลงทะเบียนเรียบร้อย',
                 icon: 'success',
@@ -564,7 +684,6 @@ submitBtn.addEventListener('click', async (event) => {
                 allowOutsideClick: false
             });
 
-            // 6. Close Window
             liff.closeWindow();
 
         } catch (error) {
