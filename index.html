@@ -224,7 +224,7 @@ async function sendFlexMessage() {
       "altText": "ลงทะเบียนสำเร็จ: MWA e-Bill",
       "contents": {
         "type": "bubble",
-        "size": "giga",
+        "size": "mega",
         "header": {
           "type": "box",
           "layout": "vertical",
@@ -321,7 +321,7 @@ async function sendFlexMessage() {
                 {
                   "type": "text",
                   "text": keynumber3IdInput.value, 
-                  "size": "sm",
+                  "size": "xs",
                   "color": "#111111",
                   "align": "end",
                   "flex": 3,
@@ -344,7 +344,7 @@ async function sendFlexMessage() {
                 {
                   "type": "text",
                   "text": nameIdInput.value,
-                  "size": "sm",
+                  "size": "xs",
                   "color": "#111111",
                   "align": "end",
                   "flex": 2,
@@ -367,7 +367,7 @@ async function sendFlexMessage() {
                 {
                   "type": "text",
                   "text": formattedPhone,
-                  "size": "sm",
+                  "size": "xs",
                   "color": "#111111",
                   "align": "end",
                   "flex": 2,
@@ -394,7 +394,8 @@ async function sendFlexMessage() {
                   "color": "#111111",
                   "align": "end",
                   "flex": 3,
-                  "wrap": true
+                  "wrap": true,
+                  "weight": "bold"
                 }
               ],
               "margin": "sm"
