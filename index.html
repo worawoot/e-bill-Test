@@ -32,13 +32,13 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.9); /* เพิ่มความทึบเล็กน้อยเพื่อปิดบังฟอร์มขณะโหลด */
         z-index: 9999;
-        display: none;
+        display: none; /* เริ่มต้นซ่อนไว้ จะเปิดด้วย JS */
         align-items: center;
         justify-content: center;
         flex-direction: column;
-    }		
+    }       
   	</style>
 	
 </head>
@@ -47,7 +47,8 @@
 <!-- Loading Spinner -->
 <div id="loadingOverlay" class="loading-overlay">
     <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mb-4"></div>
-    <p class="text-gray-600 font-semibold">กำลังบันทึกข้อมูล.....</p>
+    <!-- เพิ่ม id ให้ข้อความเพื่อเปลี่ยนข้อความได้ -->
+    <p id="loadingText" class="text-gray-600 font-semibold">กรุณารอสักครู่...</p>
 </div>
 	
 <div class="max-w-md m-auto p-2">
@@ -157,11 +158,19 @@ let keynumber3IdInput = document.getElementById("keynumber3Id");
 let keynumber4IdInput = document.getElementById("keynumber4Id");
 let keynumber5IdInput = document.getElementById("keynumber5Id");
 
+// ตัวแปรจัดการ Loading Overlay
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingText = document.getElementById('loadingText');
+
 // ตัวแปรสำหรับเก็บ URL รูปปัจจุบัน (เริ่มที่ Default)
 let currentProfileImage = DEFAULT_AVATAR;
 
 // ฟังก์ชันเริ่มต้น LIFF SDK
 window.onload = function () {
+	// --- 1. แสดง Loading ทันทีที่เปิดหน้าเว็บ ---
+    loadingText.innerText = "กำลังโหลดข้อมูลสมาชิก...";
+    loadingOverlay.style.display = 'flex';
+    
     initializeLiff();
 };
 
@@ -170,12 +179,14 @@ async function initializeLiff() {
 	try {
     	await liff.init({ liffId: `${LIFF_ID}` });
     	if (liff.isLoggedIn()) {
-        	getUserProfile();
+        	await getUserProfile(); // รอให้ดึงโปรไฟล์เสร็จ
     	} else {
         	liff.login();
 		}
     }catch (err) {
         console.error('LIFF Init failed', err);
+		// ปิด Loading หากเกิด Error เพื่อให้ user เห็นข้อความ
+        loadingOverlay.style.display = 'none';
         Swal.fire('Error', 'ไม่สามารถเชื่อมต่อกับ LINE ได้', 'error');
     }
 }
@@ -200,6 +211,11 @@ async function getUserProfile() {
         }
     } catch (error) {
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
+    } finally {
+        // --- 2. ปิด Loading เมื่อทำงานทุกอย่างเสร็จสิ้น (ไม่ว่าจะ error หรือไม่) ---
+        setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+        }, 500); // หน่วงเวลาเล็กน้อยเพื่อความนุ่มนวล
     }
 }
 
@@ -456,7 +472,10 @@ submitBtn.addEventListener('click', async (event) => {
 
     if (isConfirmed) {
         submitBtn.disabled = true;
-		loadingOverlay.style.display = 'flex'; // Show custom loading overlay
+
+		// --- เปลี่ยนข้อความและแสดง Loading สำหรับการบันทึก ---
+        loadingText.innerText = "กำลังบันทึกข้อมูล...";
+        loadingOverlay.style.display = 'flex'; 		
 
         try {
             let obj;			 
